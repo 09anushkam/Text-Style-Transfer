@@ -1,0 +1,15 @@
+# Ignore Python virtual environments
+venv/
+.env/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore model files or other large data
+*.pkl
+*.pt
+*.h5
+*.ckpt
+*.dll
