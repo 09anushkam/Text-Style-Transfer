@@ -1,15 +1,18 @@
-# Ignore Python virtual environments
+# Ignore virtual environments
 venv/
 .env/
 
-# Ignore Python cache
+# Ignore Python cache and build files
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.log
+*.egg-info/
 
-# Ignore model files or other large data
-*.pkl
+# Ignore large model/data files
 *.pt
+*.pth
 *.h5
-*.ckpt
+*.pkl
 *.dll
