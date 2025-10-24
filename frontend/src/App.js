@@ -268,11 +268,11 @@ function App() {
     ],
     normal: [
       // BASIC GENUINE EXAMPLES
-      { text: "I am tired", description: "I'm just bursting with energy", type: "genuine" },
-      { text: "I'm exhausted", description: "I'm feeling absolutely refreshed", type: "genuine" },
-      { text: "This is a problem", description: "This is just fantastic", type: "genuine" },
-      { text: "The weather is bad", description: "What beautiful weather", type: "genuine" },
-      { text: "I have to wait", description: "I get to enjoy some quality waiting time", type: "genuine" },
+  { text: "I am tired", description: "I'm just bursting with energy", type: "genuine" },
+  { text: "I'm exhausted", description: "I'm feeling absolutely refreshed", type: "genuine" },
+  { text: "This is a problem", description: "This is just fantastic", type: "genuine" },
+  { text: "The weather is bad", description: "What beautiful weather", type: "genuine" },
+  { text: "I have to wait", description: "I get to enjoy some quality waiting time", type: "genuine" },
       { text: "This is difficult", description: "This is a piece of cake", type: "genuine" },
       { text: "I don't understand", description: "This makes perfect sense", type: "genuine" },
       { text: "This is terrible", description: "This is wonderful", type: "genuine" },
@@ -341,7 +341,75 @@ function App() {
       { text: "You are clever", description: "You're so incredibly clever", type: "genuine" },
       { text: "You are brilliant", description: "You're absolutely brilliant", type: "genuine" },
       { text: "You are talented", description: "You're so incredibly talented", type: "genuine" },
-    ]
+      
+      // ADDITIONAL BASIC GENUINE EXAMPLES
+      { text: "I am frustrated", description: "I'm absolutely delighted", type: "genuine" },
+      { text: "This is annoying", description: "This is wonderful", type: "genuine" },
+      { text: "I am disappointed", description: "I'm thrilled", type: "genuine" },
+      { text: "This is frustrating", description: "This is fantastic", type: "genuine" },
+      { text: "I am overwhelmed", description: "I'm having a wonderful time", type: "genuine" },
+      { text: "This is confusing", description: "This makes perfect sense", type: "genuine" },
+      { text: "I am worried", description: "I'm totally carefree", type: "genuine" },
+      { text: "This is stressful", description: "This is relaxing", type: "genuine" },
+      { text: "I am confused", description: "I understand perfectly", type: "genuine" },
+      { text: "This is overwhelming", description: "This is manageable", type: "genuine" },
+      
+      // ADDITIONAL WORK/MEETING GENUINE EXAMPLES
+      { text: "I am dreading this presentation", description: "I'm excited about this presentation", type: "genuine" },
+      { text: "This project is overwhelming", description: "This project is exciting", type: "genuine" },
+      { text: "I am stressed about this deadline", description: "I'm confident about this deadline", type: "genuine" },
+      { text: "This meeting is unnecessary", description: "This meeting is productive", type: "genuine" },
+      { text: "I am exhausted from work", description: "I'm energized from work", type: "genuine" },
+      
+      // ADDITIONAL TECHNOLOGY GENUINE EXAMPLES
+      { text: "This software is buggy", description: "This software is reliable", type: "genuine" },
+      { text: "My laptop is overheating", description: "My laptop is running cool", type: "genuine" },
+      { text: "The system is crashing", description: "The system is stable", type: "genuine" },
+      { text: "This update is problematic", description: "This update is beneficial", type: "genuine" },
+      { text: "The interface is confusing", description: "The interface is intuitive", type: "genuine" },
+      
+      // ADDITIONAL WEATHER GENUINE EXAMPLES
+      { text: "The storm is dangerous", description: "The storm is beautiful", type: "genuine" },
+      { text: "This humidity is unbearable", description: "This humidity is comfortable", type: "genuine" },
+      { text: "The fog is thick", description: "The fog is light", type: "genuine" },
+      { text: "This heat is oppressive", description: "This heat is pleasant", type: "genuine" },
+      { text: "The cold is freezing", description: "The cold is refreshing", type: "genuine" },
+      
+      // ADDITIONAL FOOD GENUINE EXAMPLES
+      { text: "This dish is overcooked", description: "This dish is perfectly cooked", type: "genuine" },
+      { text: "The restaurant is crowded", description: "The restaurant is quiet", type: "genuine" },
+      { text: "This meal is expensive", description: "This meal is affordable", type: "genuine" },
+      { text: "The food is undercooked", description: "The food is well-prepared", type: "genuine" },
+      { text: "This place is noisy", description: "This place is peaceful", type: "genuine" },
+      
+      // ADDITIONAL TRAVEL GENUINE EXAMPLES
+      { text: "The journey is exhausting", description: "The journey is exciting", type: "genuine" },
+      { text: "This trip is expensive", description: "This trip is affordable", type: "genuine" },
+      { text: "The accommodation is poor", description: "The accommodation is excellent", type: "genuine" },
+      { text: "This destination is boring", description: "This destination is interesting", type: "genuine" },
+      { text: "The transportation is unreliable", description: "The transportation is reliable", type: "genuine" },
+      
+      // ADDITIONAL HEALTH GENUINE EXAMPLES
+      { text: "I am in pain", description: "I'm feeling great", type: "genuine" },
+      { text: "This medication is ineffective", description: "This medication is effective", type: "genuine" },
+      { text: "I am feeling weak", description: "I'm feeling strong", type: "genuine" },
+      { text: "This treatment is painful", description: "This treatment is comfortable", type: "genuine" },
+      { text: "I am feeling nauseous", description: "I'm feeling healthy", type: "genuine" },
+      
+      // ADDITIONAL EDUCATION GENUINE EXAMPLES
+      { text: "This subject is difficult", description: "This subject is easy", type: "genuine" },
+      { text: "The professor is unclear", description: "The professor is clear", type: "genuine" },
+      { text: "This assignment is confusing", description: "This assignment is straightforward", type: "genuine" },
+      { text: "The textbook is outdated", description: "The textbook is current", type: "genuine" },
+      { text: "This course is boring", description: "This course is engaging", type: "genuine" },
+      
+      // ADDITIONAL RELATIONSHIP GENUINE EXAMPLES
+      { text: "My colleague is unhelpful", description: "My colleague is helpful", type: "genuine" },
+      { text: "This conversation is awkward", description: "This conversation is comfortable", type: "genuine" },
+      { text: "My roommate is messy", description: "My roommate is tidy", type: "genuine" },
+      { text: "This relationship is toxic", description: "This relationship is healthy", type: "genuine" },
+      { text: "My teammate is unreliable", description: "My teammate is reliable", type: "genuine" },
+]
   };
 
   return (
