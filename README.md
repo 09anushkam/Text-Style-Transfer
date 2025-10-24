@@ -82,7 +82,7 @@ Based on comprehensive testing with 50+ test cases, the hybrid system achieves:
 - **⚡ <500ms response time** for batch processing
 - **⚡ <50ms response time** for real-time analysis
 
-### 🆕 **Latest Enhancements (December 2024):**
+### 🆕 **Latest Enhancements :**
 - ✅ **Machine Learning Models**: LSTM, CNN, Transformer, Ensemble architectures
 - ✅ **Hybrid Detection System**: Combines ML models with pattern-based detection
 - ✅ **Auto-fallback Mechanism**: Seamless switching between ML and pattern-based
@@ -1170,4 +1170,5 @@ For questions or support, please open an issue on GitHub.
 
 
 **🎭 SarcasmAI** - Advanced ML-powered sarcasm detection and conversion with 99%+ accuracy!
+
 
