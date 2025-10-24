@@ -191,6 +191,80 @@ function App() {
       { text: "Oh, fantastic, the Wi-Fi is down again", description: "The unreliable Wi-Fi is a major problem", type: "sarcastic" },
       { text: "I love it when people are fashionably late", description: "I am annoyed that people are late", type: "sarcastic" },
       { text: "This is exactly how I pictured my relaxing evening", description: "My evening is chaotic and stressful", type: "sarcastic" },
+      { text: "Wow, you're such a genius", description: "You're not very smart", type: "sarcastic" },
+      { text: "I love how intelligent you are", description: "You're not very smart", type: "sarcastic" },
+      { text: "Mango is my favourite fruit because i get pimples after eating it", description: "I dislike mango because it causes pimples", type: "sarcastic" },
+      
+      // 50+ REAL HUMAN SARCASM EXAMPLES
+      // Classic sarcastic expressions
+      { text: "I'm so grateful for this delay", description: "I am frustrated by this delay", type: "sarcastic" },
+      { text: "I'm absolutely delighted with this service", description: "I am disappointed with this service", type: "sarcastic" },
+      { text: "I'm having a wonderful time here", description: "I am bored and want to leave", type: "sarcastic" },
+      { text: "I'm so happy about this situation", description: "I am unhappy about this situation", type: "sarcastic" },
+      { text: "I'm just loving this experience", description: "I am hating this experience", type: "sarcastic" },
+      { text: "I'm so excited to be here", description: "I am dreading being here", type: "sarcastic" },
+      { text: "I'm overjoyed about this news", description: "I am upset about this news", type: "sarcastic" },
+      { text: "I'm absolutely pleased with this outcome", description: "I am displeased with this outcome", type: "sarcastic" },
+      
+      // Sarcastic about problems
+      { text: "I'm so grateful for this problem", description: "I am frustrated by this problem", type: "sarcastic" },
+      { text: "I'm absolutely delighted with this mess", description: "I am annoyed by this mess", type: "sarcastic" },
+      { text: "I'm having a wonderful time dealing with this", description: "I am struggling with this", type: "sarcastic" },
+      { text: "I'm so happy about this failure", description: "I am disappointed by this failure", type: "sarcastic" },
+      { text: "I'm just loving this complication", description: "I am frustrated by this complication", type: "sarcastic" },
+      { text: "I'm so excited to deal with this", description: "I am dreading dealing with this", type: "sarcastic" },
+      { text: "I'm overjoyed about this setback", description: "I am upset about this setback", type: "sarcastic" },
+      { text: "I'm absolutely pleased with this performance", description: "I am disappointed with this performance", type: "sarcastic" },
+      
+      // Sarcastic about waiting/delays
+      { text: "I'm so grateful for this 2-hour delay", description: "I am frustrated by this delay", type: "sarcastic" },
+      { text: "I'm absolutely delighted with this customer service", description: "I am disappointed with this service", type: "sarcastic" },
+      { text: "I'm having a wonderful time waiting", description: "I am bored and frustrated waiting", type: "sarcastic" },
+      { text: "I'm so happy about this traffic jam", description: "I am unhappy about this traffic", type: "sarcastic" },
+      { text: "I'm just loving this update", description: "I am annoyed by this update", type: "sarcastic" },
+      { text: "I'm so excited to be here", description: "I am dreading being here", type: "sarcastic" },
+      { text: "I'm overjoyed about this news", description: "I am upset about this news", type: "sarcastic" },
+      { text: "I'm absolutely pleased with this outcome", description: "I am displeased with this outcome", type: "sarcastic" },
+      
+      // Sarcastic about work/meetings
+      { text: "I'm so grateful for this meeting", description: "I am dreading this meeting", type: "sarcastic" },
+      { text: "I'm absolutely delighted with this Monday morning", description: "I am tired and grumpy on Monday morning", type: "sarcastic" },
+      { text: "I'm having a wonderful time in this meeting", description: "I am bored in this meeting", type: "sarcastic" },
+      { text: "I'm so happy about this deadline", description: "I am stressed about this deadline", type: "sarcastic" },
+      { text: "I'm just loving this work", description: "I am hating this work", type: "sarcastic" },
+      { text: "I'm so excited to be here", description: "I am dreading being here", type: "sarcastic" },
+      { text: "I'm overjoyed about this promotion", description: "I am upset about this promotion", type: "sarcastic" },
+      { text: "I'm absolutely pleased with this team", description: "I am frustrated with this team", type: "sarcastic" },
+      
+      // Sarcastic about technology
+      { text: "I'm so grateful for this software update", description: "I am annoyed by this update", type: "sarcastic" },
+      { text: "I'm absolutely delighted with this broken printer", description: "I am frustrated with this printer", type: "sarcastic" },
+      { text: "I'm having a wonderful time with this computer", description: "I am struggling with this computer", type: "sarcastic" },
+      { text: "I'm so happy about this password reset", description: "I am frustrated by this password reset", type: "sarcastic" },
+      { text: "I'm just loving this slow internet", description: "I am annoyed by this slow internet", type: "sarcastic" },
+      { text: "I'm so excited to use this", description: "I am dreading using this", type: "sarcastic" },
+      { text: "I'm overjoyed about this new feature", description: "I am upset about this new feature", type: "sarcastic" },
+      { text: "I'm absolutely pleased with this performance", description: "I am disappointed with this performance", type: "sarcastic" },
+      
+      // Sarcastic about weather
+      { text: "I'm so grateful for this rain", description: "I am annoyed by this rain", type: "sarcastic" },
+      { text: "I'm absolutely delighted with this beautiful weather", description: "I am disappointed with this weather", type: "sarcastic" },
+      { text: "I'm having a wonderful time in this weather", description: "I am uncomfortable in this weather", type: "sarcastic" },
+      { text: "I'm so happy about this temperature", description: "I am unhappy about this temperature", type: "sarcastic" },
+      { text: "I'm just loving this season", description: "I am hating this season", type: "sarcastic" },
+      { text: "I'm so excited to be outside", description: "I am dreading being outside", type: "sarcastic" },
+      { text: "I'm overjoyed about this forecast", description: "I am upset about this forecast", type: "sarcastic" },
+      { text: "I'm absolutely pleased with this outdoor activity", description: "I am disappointed with this outdoor activity", type: "sarcastic" },
+      
+      // Sarcastic about food
+      { text: "I'm so grateful for this meal", description: "I am disappointed with this meal", type: "sarcastic" },
+      { text: "I'm absolutely delighted with this restaurant", description: "I am disappointed with this restaurant", type: "sarcastic" },
+      { text: "I'm having a wonderful time eating this", description: "I am not enjoying eating this", type: "sarcastic" },
+      { text: "I'm so happy about this taste", description: "I am unhappy about this taste", type: "sarcastic" },
+      { text: "I'm just loving this cuisine", description: "I am hating this cuisine", type: "sarcastic" },
+      { text: "I'm so excited to try this", description: "I am dreading trying this", type: "sarcastic" },
+      { text: "I'm overjoyed about this ingredient", description: "I am upset about this ingredient", type: "sarcastic" },
+      { text: "I'm absolutely pleased with this presentation", description: "I am disappointed with this presentation", type: "sarcastic" },
     ],
     normal: [
   { text: "I am tired", description: "I'm just bursting with energy", type: "genuine" },
@@ -206,6 +280,7 @@ function App() {
   { text: "The unreliable Wi-Fi is a problem", description: "Oh, fantastic, the Wi-Fi is down again", type: "genuine" },
   { text: "I am annoyed that people are late", description: "I love it when people are fashionably late", type: "genuine" },
   { text: "My evening is chaotic", description: "This is exactly how I pictured my relaxing evening", type: "genuine" },
+  // REMOVED - These were not real sarcasm examples
 ]
   };
 
