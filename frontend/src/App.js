@@ -267,21 +267,81 @@ function App() {
       { text: "I'm absolutely pleased with this presentation", description: "I am disappointed with this presentation", type: "sarcastic" },
     ],
     normal: [
-  { text: "I am tired", description: "I'm just bursting with energy", type: "genuine" },
-  { text: "I'm exhausted", description: "I'm feeling absolutely refreshed", type: "genuine" },
-  { text: "This is a problem", description: "This is just fantastic", type: "genuine" },
-  { text: "The weather is bad", description: "What beautiful weather", type: "genuine" },
-  { text: "I have to wait", description: "I get to enjoy some quality waiting time", type: "genuine" },
-  { text: "This is a pointless waste of time", description: "Well, this is a productive use of my time", type: "genuine" },
-  { text: "That was a stupid comment", description: "You're a genius, thank you for that insight", type: "genuine" },
-  { text: "I am frustrated with this customer service", description: "I'm thrilled to be on hold for the 45th minute", type: "genuine" },
-  { text: "The timing for this update is inconvenient", description: "My phone updating right before a call is perfect timing", type: "genuine" },
-  { text: "This meeting is unnecessary", description: "Another meeting that could have been an email? Lovely.", type: "genuine" },
-  { text: "The unreliable Wi-Fi is a problem", description: "Oh, fantastic, the Wi-Fi is down again", type: "genuine" },
-  { text: "I am annoyed that people are late", description: "I love it when people are fashionably late", type: "genuine" },
-  { text: "My evening is chaotic", description: "This is exactly how I pictured my relaxing evening", type: "genuine" },
-  // REMOVED - These were not real sarcasm examples
-]
+      // BASIC GENUINE EXAMPLES
+      { text: "I am tired", description: "I'm just bursting with energy", type: "genuine" },
+      { text: "I'm exhausted", description: "I'm feeling absolutely refreshed", type: "genuine" },
+      { text: "This is a problem", description: "This is just fantastic", type: "genuine" },
+      { text: "The weather is bad", description: "What beautiful weather", type: "genuine" },
+      { text: "I have to wait", description: "I get to enjoy some quality waiting time", type: "genuine" },
+      { text: "This is difficult", description: "This is a piece of cake", type: "genuine" },
+      { text: "I don't understand", description: "This makes perfect sense", type: "genuine" },
+      { text: "This is terrible", description: "This is wonderful", type: "genuine" },
+      { text: "I hate this", description: "I absolutely love this", type: "genuine" },
+      { text: "This is boring", description: "This is so exciting", type: "genuine" },
+      
+      // WORK/MEETING GENUINE EXAMPLES
+      { text: "I have a meeting", description: "I'm so excited about this meeting", type: "genuine" },
+      { text: "I have work to do", description: "I'm thrilled to have more work", type: "genuine" },
+      { text: "This deadline is stressful", description: "I love working under pressure", type: "genuine" },
+      { text: "I am busy", description: "I have all the time in the world", type: "genuine" },
+      { text: "I need a break", description: "I'm energized and ready for more", type: "genuine" },
+      
+      // TECHNOLOGY GENUINE EXAMPLES
+      { text: "My computer is slow", description: "My computer is lightning fast", type: "genuine" },
+      { text: "The internet is down", description: "The internet is working perfectly", type: "genuine" },
+      { text: "My phone died", description: "My phone has infinite battery", type: "genuine" },
+      { text: "The app crashed", description: "The app is running smoothly", type: "genuine" },
+      { text: "I lost my data", description: "My data is perfectly safe", type: "genuine" },
+      
+      // WEATHER GENUINE EXAMPLES
+      { text: "It is cold outside", description: "The weather is wonderfully warm", type: "genuine" },
+      { text: "It is hot today", description: "Such refreshing cool weather", type: "genuine" },
+      { text: "It is windy", description: "Perfect calm weather", type: "genuine" },
+      { text: "It is snowing", description: "Beautiful sunny day", type: "genuine" },
+      { text: "It is humid", description: "Such dry comfortable air", type: "genuine" },
+      
+      // FOOD GENUINE EXAMPLES
+      { text: "This food is bland", description: "This food is incredibly flavorful", type: "genuine" },
+      { text: "The service is slow", description: "The service is lightning fast", type: "genuine" },
+      { text: "The food is cold", description: "The food is perfectly hot", type: "genuine" },
+      { text: "This tastes bad", description: "This tastes absolutely delicious", type: "genuine" },
+      { text: "The portion is small", description: "What a generous portion", type: "genuine" },
+      
+      // TRAVEL GENUINE EXAMPLES
+      { text: "The flight is delayed", description: "We're making excellent time", type: "genuine" },
+      { text: "Traffic is terrible", description: "The roads are perfectly clear", type: "genuine" },
+      { text: "The hotel is noisy", description: "Such a peaceful quiet hotel", type: "genuine" },
+      { text: "The room is small", description: "What a spacious room", type: "genuine" },
+      { text: "The service is poor", description: "Excellent customer service", type: "genuine" },
+      
+      // HEALTH GENUINE EXAMPLES
+      { text: "I am sick", description: "I'm feeling absolutely wonderful", type: "genuine" },
+      { text: "I have a headache", description: "My head feels perfectly clear", type: "genuine" },
+      { text: "I am stressed", description: "I'm completely relaxed", type: "genuine" },
+      { text: "I am worried", description: "I'm totally carefree", type: "genuine" },
+      { text: "I am anxious", description: "I'm perfectly calm", type: "genuine" },
+      
+      // EDUCATION GENUINE EXAMPLES
+      { text: "This class is boring", description: "This class is so exciting", type: "genuine" },
+      { text: "The exam is hard", description: "This exam is incredibly easy", type: "genuine" },
+      { text: "I failed the test", description: "I aced that test perfectly", type: "genuine" },
+      { text: "The teacher is strict", description: "The teacher is so understanding", type: "genuine" },
+      { text: "Homework is difficult", description: "Homework is a piece of cake", type: "genuine" },
+      
+      // RELATIONSHIP GENUINE EXAMPLES
+      { text: "My friend is annoying", description: "My friend is absolutely delightful", type: "genuine" },
+      { text: "My boss is demanding", description: "My boss is so understanding", type: "genuine" },
+      { text: "My neighbor is loud", description: "My neighbor is perfectly quiet", type: "genuine" },
+      { text: "My family is difficult", description: "My family is wonderful", type: "genuine" },
+      { text: "My partner is late", description: "My partner is always punctual", type: "genuine" },
+      
+      // PERSONAL GENUINE EXAMPLES
+      { text: "You are smart", description: "Wow, you're such a genius", type: "genuine" },
+      { text: "You are intelligent", description: "What a brilliant mind you have", type: "genuine" },
+      { text: "You are clever", description: "You're so incredibly clever", type: "genuine" },
+      { text: "You are brilliant", description: "You're absolutely brilliant", type: "genuine" },
+      { text: "You are talented", description: "You're so incredibly talented", type: "genuine" },
+    ]
   };
 
   return (

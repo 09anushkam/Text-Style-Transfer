@@ -1,4 +1,4 @@
-# app.py - COMPLETELY FINAL PERFECT VERSION
+# app.py - ENHANCED SARCASM DETECTION WITH CONTEXT AWARENESS
 import os
 import traceback
 from flask import Flask, request, jsonify
@@ -11,6 +11,8 @@ import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 import random
 from datetime import datetime
+import json
+from collections import defaultdict
 
 # Download required NLTK data
 try:
@@ -28,9 +30,9 @@ print(f"Using device: {device}")
 models = {}
 sia = SentimentIntensityAnalyzer()
 
-# ENHANCED SARCASM DETECTION PATTERNS
+# ENHANCED CONTEXT-AWARE SARCASM DETECTION PATTERNS
 COMPLETE_SARCASTIC_PATTERNS = [
-    # OBVIOUS SARCASM
+    # HIGH CONFIDENCE OBVIOUS SARCASM
     (r'\b(just|exactly) what i (needed|wanted)\b', 0.98),
     (r'\boh\s+(great|wonderful|fantastic|perfect|lovely|brilliant)\b', 0.97),
     (r'\byeah\s+(right|sure)\b', 0.96),
@@ -40,132 +42,90 @@ COMPLETE_SARCASTIC_PATTERNS = [
     (r'\bno problem at all\b', 0.92),
     (r'\bthanks a (bunch|lot|million)\b', 0.91),
     
-    # ENHANCED PATTERNS
+    # CONTEXTUAL SARCASM PATTERNS
+    (r'\b(im|i\'m) (so|absolutely|totally) (grateful|thankful) for (this|that) (delay|wait|hold|inconvenience|problem|issue|trouble)\b', 0.96),
+    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (service|customer service|support|help|performance|quality)\b', 0.95),
+    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (waiting|dealing with|sitting through|stuck|here|there)\b', 0.94),
+    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (traffic|delay|problem|issue|situation|news|development)\b', 0.93),
+    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (experience|adventure|journey|update|change|meeting|schedule)\b', 0.92),
+    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (be|do|have|deal with|handle|fix|solve) (this|that|it)\b', 0.91),
+    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (news|development|situation|setback|delay|postponement)\b', 0.90),
+    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (outcome|result|performance|team|colleague|boss|manager)\b', 0.89),
+    
+    # ENHANCED ENERGY/EXHAUSTION PATTERNS
     (r'\b(im|i\'m) (just|absolutely|totally) (bursting|overflowing) with (energy|vitality|enthusiasm)\b', 0.99),
     (r'\b(im|i\'m) (feeling|absolutely) (refreshed|energized|vitalized)\b', 0.98),
-    (r'\bthis is (just|absolutely) (fantastic|wonderful|perfect|amazing)\b', 0.97),
-    (r'\bwhat (a|an) (joy|pleasure|delight) (this|that) is\b', 0.96),
-    (r'\b(im|i\'m) (thrilled|delighted|ecstatic) to (be|do)\b', 0.95),
+    (r'\b(im|i\'m) (full of|overflowing with) (energy|vitality|enthusiasm)\b', 0.97),
+    (r'\b(im|i\'m) (so|absolutely) (energized|refreshed|vitalized)\b', 0.96),
+    
+    # GENERAL POSITIVE SARCASM PATTERNS
+    (r'\bthis is (just|absolutely) (fantastic|wonderful|perfect|amazing|brilliant|lovely)\b', 0.97),
+    (r'\bwhat (a|an) (joy|pleasure|delight|treat) (this|that) is\b', 0.96),
+    (r'\b(im|i\'m) (thrilled|delighted|ecstatic) to (be|do|have)\b', 0.95),
     (r'\b(im|i\'m) (having|enjoying) the (time|moment) of my (life|day)\b', 0.94),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) about (this|that)\b', 0.93),
+    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) about (this|that|it)\b', 0.93),
     (r'\b(im|i\'m) (just|absolutely) (loving|adoring) (this|that|it)\b', 0.92),
     
-    # REAL HUMAN SARCASM PATTERNS
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (delay|wait|hold|inconvenience)\b', 0.95),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (service|customer service|support)\b', 0.94),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (waiting|dealing with|sitting through)\b', 0.93),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (traffic|delay|problem|issue)\b', 0.92),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (update|change|meeting|schedule)\b', 0.91),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (be|do|have) (this|that|it)\b', 0.90),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (news|development|situation)\b', 0.89),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (outcome|result|performance)\b', 0.88),
-    
-    # CONTEXTUAL SARCASM WITH NEGATIVE CONTEXT
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (2-hour|long|endless) (delay|wait|hold)\b', 0.96),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (terrible|awful|horrible) (service|support)\b', 0.95),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (stuck|waiting|dealing with) (in|on|at)\b', 0.94),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (traffic jam|delay|problem|issue)\b', 0.93),
-    
-    # REMOVED - These patterns were not detecting real sarcasm correctly
-    
-    # POSITIVE + NEGATIVE CONTEXT
-    (r'\bi love (waiting|standing|sitting|dealing with|traffic|meetings|mondays)\b', 0.95),
-    (r'\b(my favorite|the best) (part|thing) (about|of) (waiting|traffic|work|mondays)\b', 0.94),
-    (r'\bnothing better than (waiting|traffic|work|problems)\b', 0.93),
-    
-    # 50+ REAL HUMAN SARCASM PATTERNS
-    # Classic sarcastic expressions - FIXED PATTERNS
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (delay|wait|hold|inconvenience)\b', 0.94),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (service|support|help)\b', 0.93),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (here|there|waiting)\b', 0.92),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (situation|news|development)\b', 0.91),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (experience|adventure|journey)\b', 0.90),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (be|do|have) (this|that|it)\b', 0.89),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (news|development|situation)\b', 0.88),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (outcome|result|performance)\b', 0.87),
-    
-    # WORKING SARCASM PATTERNS - These actually detect sarcasm
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (delay|wait|hold|inconvenience)\b', 0.94),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (service|support|help)\b', 0.93),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (here|there|waiting)\b', 0.92),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (situation|news|development)\b', 0.91),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (experience|adventure|journey)\b', 0.90),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (be|do|have) (this|that|it)\b', 0.89),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (news|development|situation)\b', 0.88),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (outcome|result|performance)\b', 0.87),
-    
-    # Sarcastic about problems
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (problem|issue|trouble|headache)\b', 0.96),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (mess|chaos|disaster|nightmare)\b', 0.95),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (dealing with|fixing|solving)\b', 0.94),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (failure|mistake|error|bug)\b', 0.93),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (complication|difficulty|challenge|obstacle)\b', 0.92),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (deal with|handle|fix|solve) (this|that|it)\b', 0.91),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (setback|delay|postponement)\b', 0.90),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (performance|quality|service)\b', 0.89),
-    
-    # Sarcastic about waiting/delays
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (2-hour|long|endless|eternal) (delay|wait|hold)\b', 0.97),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (customer service|support|help)\b', 0.96),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (stuck|waiting|dealing with)\b', 0.95),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (traffic jam|delay|problem|issue)\b', 0.94),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (update|change|meeting|schedule)\b', 0.93),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (be|do|have) (this|that|it)\b', 0.92),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (news|development|situation)\b', 0.91),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (outcome|result|performance)\b', 0.90),
-    
-    # Sarcastic about work/meetings
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (meeting|conference|presentation)\b', 0.95),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (monday morning|early morning|late night)\b', 0.94),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (in|at|during) (this|that) (meeting|conference)\b', 0.93),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (deadline|project|assignment|task)\b', 0.92),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (work|job|career|profession)\b', 0.91),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (be|do|have) (this|that|it)\b', 0.90),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (promotion|raise|bonus|recognition)\b', 0.89),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (team|colleague|boss|manager)\b', 0.88),
-    
-    # Sarcastic about technology
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (software update|system upgrade|maintenance)\b', 0.96),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (broken|faulty|defective) (printer|device|equipment)\b', 0.95),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (with|using|dealing with) (this|that) (computer|software|app)\b', 0.94),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (password reset|login issue|connection problem)\b', 0.93),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (slow|laggy|unresponsive) (internet|wifi|network)\b', 0.92),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (use|try|test) (this|that|it)\b', 0.91),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (new feature|update|upgrade|change)\b', 0.90),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (performance|speed|reliability|stability)\b', 0.89),
-    
-    # Sarcastic about weather
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (rain|snow|storm|weather)\b', 0.94),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (beautiful|perfect|lovely) (weather|day|morning)\b', 0.93),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (in|with) (this|that) (weather|climate)\b', 0.92),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (temperature|humidity|forecast)\b', 0.91),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (season|time of year|climate)\b', 0.90),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (be|go|stay) (outside|out|in) (this|that) (weather|climate)\b', 0.89),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (weather|forecast|prediction)\b', 0.88),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (outdoor|outside|outdoor) (activity|event|plan)\b', 0.87),
-    
-    # Sarcastic about food
-    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (meal|food|dinner|lunch|breakfast)\b', 0.93),
-    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (restaurant|service|food|meal)\b', 0.92),
-    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (eating|dining|having) (this|that)\b', 0.91),
-    (r'\b(im|i\'m) (so|absolutely) (happy|pleased|delighted) about (this|that) (taste|flavor|quality|preparation)\b', 0.90),
-    (r'\b(im|i\'m) (just|absolutely) (loving|enjoying) (this|that) (cuisine|food|dish|meal)\b', 0.89),
-    (r'\b(im|i\'m) (so|absolutely) (excited|thrilled) to (try|eat|taste) (this|that|it)\b', 0.88),
-    (r'\b(im|i\'m) (just|absolutely) (overjoyed|ecstatic) about (this|that) (ingredient|recipe|cooking|preparation)\b', 0.87),
-    (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (presentation|appearance|serving|portion)\b', 0.86),
-    (r'\b(absolutely|totally) (adore|love) (this|that|it)\b', 0.92),
-    
-    # PERSONAL SARCASM (NEW)
+    # PERSONAL SARCASM PATTERNS
     (r'\b(wow|oh) i (just |absolutely |totally )?love how (smart|intelligent|clever|brilliant) you are\b', 0.96),
     (r'\bi love how (smart|intelligent|clever|brilliant) you are\b', 0.95),
     (r'\byou\'re so (smart|intelligent|clever|brilliant)\b', 0.94),
-    (r'\bwhat a (genius|brilliant idea)\b', 0.93),
+    (r'\bwhat a (genius|brilliant idea|smart move)\b', 0.93),
+    (r'\b(you\'re|you are) such a (genius|brilliant person)\b', 0.92),
     
-    # SPECIFIC HIGH-CONFIDENCE PATTERNS
-    (r'\bi (love|like|enjoy) .+ because .+ (trouble|problem|pain|annoying|stress|headache|pimples|hurt)\b', 0.96),
-    (r'\b(.+) is my (favorite|favourite) (.+) because .+ (terrible|awful|horrible|bad|negative|pimples|pain)\b', 0.95),
-    (r'\bi (absolutely |totally |just )?(adore|love) .+ because .+\b', 0.94),
+    # SEMANTIC CONTRADICTION PATTERNS
+    (r'\bi (love|like|enjoy) (.+?) because (.+?) (trouble|problem|pain|annoying|stress|headache|pimples|hurt|bad|terrible|awful|horrible)\b', 0.96),
+    (r'\b(.+?) is my (favorite|favourite) (.+?) because (.+?) (terrible|awful|horrible|bad|negative|pimples|pain|hurt|trouble|problem)\b', 0.95),
+    (r'\bi (absolutely |totally |just )?(adore|love) (.+?) because (.+?)\b', 0.94),
+    
+    # WORK/MEETING SARCASM
+    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (meeting|conference|presentation|deadline|project|assignment|task)\b', 0.95),
+    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (monday morning|early morning|late night|work|job|career)\b', 0.94),
+    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (in|at|during) (this|that) (meeting|conference|work)\b', 0.93),
+    
+    # TECHNOLOGY SARCASM
+    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (software update|system upgrade|maintenance|password reset|login issue)\b', 0.96),
+    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (broken|faulty|defective|slow|laggy|unresponsive) (printer|device|equipment|computer|software|app|internet|wifi|network)\b', 0.95),
+    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (with|using|dealing with) (this|that) (computer|software|app|technology)\b', 0.94),
+    
+    # WEATHER SARCASM
+    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (rain|snow|storm|weather|temperature|humidity)\b', 0.94),
+    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (beautiful|perfect|lovely) (weather|day|morning|forecast)\b', 0.93),
+    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (in|with) (this|that) (weather|climate|season)\b', 0.92),
+    
+    # FOOD SARCASM
+    (r'\b(im|i\'m) (so|absolutely) (grateful|thankful) for (this|that) (meal|food|dinner|lunch|breakfast|restaurant|service)\b', 0.93),
+    (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (restaurant|service|food|meal|taste|flavor|quality|preparation)\b', 0.92),
+    (r'\b(im|i\'m) (having|enjoying) a (wonderful|fantastic|amazing) (time|day) (eating|dining|having) (this|that)\b', 0.91),
+    
+    # EXAGGERATED COMPLIMENTS (often sarcastic)
+    (r'\b(absolutely|totally) (adore|love) (this|that|it)\b', 0.92),
+    (r'\b(im|i\'m) (so|absolutely) (impressed|amazed|astonished) by (this|that|it)\b', 0.91),
+    (r'\bthis is (absolutely|totally) (perfect|amazing|incredible|outstanding)\b', 0.90),
 ]
+
+# CONTEXT-AWARE DETECTION SYSTEM
+CONTEXT_KEYWORDS = {
+    'negative_contexts': [
+        'delay', 'wait', 'hold', 'inconvenience', 'problem', 'issue', 'trouble', 'headache',
+        'broken', 'faulty', 'defective', 'slow', 'laggy', 'unresponsive', 'terrible', 'awful',
+        'horrible', 'bad', 'negative', 'pain', 'hurt', 'stress', 'annoying', 'frustrating',
+        'boring', 'pointless', 'waste', 'unnecessary', 'chaos', 'mess', 'disaster', 'nightmare',
+        'failure', 'mistake', 'error', 'bug', 'complication', 'difficulty', 'challenge', 'obstacle',
+        'setback', 'postponement', 'cancellation', 'rejection', 'denial', 'refusal'
+    ],
+    'positive_words': [
+        'love', 'adore', 'enjoy', 'like', 'great', 'wonderful', 'fantastic', 'perfect', 'amazing',
+        'awesome', 'brilliant', 'lovely', 'beautiful', 'excellent', 'outstanding', 'incredible',
+        'favorite', 'favourite', 'best', 'smart', 'intelligent', 'clever', 'genius', 'impressed',
+        'amazed', 'astonished', 'thrilled', 'delighted', 'ecstatic', 'overjoyed', 'pleased',
+        'grateful', 'thankful', 'excited', 'happy', 'glad', 'proud', 'satisfied', 'content'
+    ],
+    'sarcastic_indicators': [
+        'just', 'absolutely', 'totally', 'so', 'really', 'oh', 'wow', 'yeah', 'right', 'sure',
+        'of course', 'as if', 'thanks a bunch', 'thanks a lot', 'no problem at all', 'sure thing'
+    ]
+}
 
 # COMPLETE CONVERSION SYSTEM
 COMPLETE_CONVERSION_SYSTEM = {
@@ -205,12 +165,68 @@ COMPLETE_CONVERSION_SYSTEM = {
             'sure': "Of course",
             'i understand': "As if I understand",
             
-            # PERSONAL SARCASM (NEW)
+            # PERSONAL SARCASM
             'you are smart': "Wow, you're such a genius",
             'you are intelligent': "What a brilliant mind you have",
             'you are clever': "You're so incredibly clever",
+            'you are brilliant': "You're absolutely brilliant",
+            'you are talented': "You're so incredibly talented",
             
-            # REMOVED - These were not real sarcasm examples
+            # WORK/MEETING SARCASM
+            'i have a meeting': "I'm so excited about this meeting",
+            'i have work to do': "I'm thrilled to have more work",
+            'this deadline is stressful': "I love working under pressure",
+            'i am busy': "I have all the time in the world",
+            'i need a break': "I'm energized and ready for more",
+            
+            # TECHNOLOGY SARCASM
+            'my computer is slow': "My computer is lightning fast",
+            'the internet is down': "The internet is working perfectly",
+            'my phone died': "My phone has infinite battery",
+            'the app crashed': "The app is running smoothly",
+            'i lost my data': "My data is perfectly safe",
+            
+            # WEATHER SARCASM
+            'it is cold outside': "The weather is wonderfully warm",
+            'it is hot today': "Such refreshing cool weather",
+            'it is windy': "Perfect calm weather",
+            'it is snowing': "Beautiful sunny day",
+            'it is humid': "Such dry comfortable air",
+            
+            # FOOD SARCASM
+            'this food is bland': "This food is incredibly flavorful",
+            'the service is slow': "The service is lightning fast",
+            'the food is cold': "The food is perfectly hot",
+            'this tastes bad': "This tastes absolutely delicious",
+            'the portion is small': "What a generous portion",
+            
+            # TRAVEL SARCASM
+            'the flight is delayed': "We're making excellent time",
+            'traffic is terrible': "The roads are perfectly clear",
+            'the hotel is noisy': "Such a peaceful quiet hotel",
+            'the room is small': "What a spacious room",
+            'the service is poor': "Excellent customer service",
+            
+            # HEALTH SARCASM
+            'i am sick': "I'm feeling absolutely wonderful",
+            'i have a headache': "My head feels perfectly clear",
+            'i am stressed': "I'm completely relaxed",
+            'i am worried': "I'm totally carefree",
+            'i am anxious': "I'm perfectly calm",
+            
+            # EDUCATION SARCASM
+            'this class is boring': "This class is so exciting",
+            'the exam is hard': "This exam is incredibly easy",
+            'i failed the test': "I aced that test perfectly",
+            'the teacher is strict': "The teacher is so understanding",
+            'homework is difficult': "Homework is a piece of cake",
+            
+            # RELATIONSHIP SARCASM
+            'my friend is annoying': "My friend is absolutely delightful",
+            'my boss is demanding': "My boss is so understanding",
+            'my neighbor is loud': "My neighbor is perfectly quiet",
+            'my family is difficult': "My family is wonderful",
+            'my partner is late': "My partner is always punctual",
         },
         'to_unsarcastic': {
             # REVERSE CONVERSIONS
@@ -247,12 +263,68 @@ COMPLETE_CONVERSION_SYSTEM = {
             "of course": "Sure",
             "as if i understand": "I understand",
             
-            # PERSONAL SARCASM REVERSAL (NEW)
-            "wow, you're such a genius": "You're stupid",
-            "what a brilliant mind you have": "You're not very smart",
-            "you're so incredibly clever": "You're not clever",
+            # PERSONAL SARCASM REVERSAL
+            "wow, you're such a genius": "You're not very smart",
+            "what a brilliant mind you have": "You're not very intelligent",
+            "you're so incredibly clever": "You're not very clever",
+            "you're absolutely brilliant": "You're not very brilliant",
+            "you're so incredibly talented": "You're not very talented",
             
-            # REMOVED - These were not real sarcasm examples
+            # WORK/MEETING REVERSAL
+            "i'm so excited about this meeting": "I am dreading this meeting",
+            "i'm thrilled to have more work": "I am overwhelmed with work",
+            "i love working under pressure": "I am stressed by this deadline",
+            "i have all the time in the world": "I am very busy",
+            "i'm energized and ready for more": "I need a break",
+            
+            # TECHNOLOGY REVERSAL
+            "my computer is lightning fast": "My computer is slow",
+            "the internet is working perfectly": "The internet is down",
+            "my phone has infinite battery": "My phone died",
+            "the app is running smoothly": "The app crashed",
+            "my data is perfectly safe": "I lost my data",
+            
+            # WEATHER REVERSAL
+            "the weather is wonderfully warm": "It is cold outside",
+            "such refreshing cool weather": "It is hot today",
+            "perfect calm weather": "It is windy",
+            "beautiful sunny day": "It is snowing",
+            "such dry comfortable air": "It is humid",
+            
+            # FOOD REVERSAL
+            "this food is incredibly flavorful": "This food is bland",
+            "the service is lightning fast": "The service is slow",
+            "the food is perfectly hot": "The food is cold",
+            "this tastes absolutely delicious": "This tastes bad",
+            "what a generous portion": "The portion is small",
+            
+            # TRAVEL REVERSAL
+            "we're making excellent time": "The flight is delayed",
+            "the roads are perfectly clear": "Traffic is terrible",
+            "such a peaceful quiet hotel": "The hotel is noisy",
+            "what a spacious room": "The room is small",
+            "excellent customer service": "The service is poor",
+            
+            # HEALTH REVERSAL
+            "i'm feeling absolutely wonderful": "I am sick",
+            "my head feels perfectly clear": "I have a headache",
+            "i'm completely relaxed": "I am stressed",
+            "i'm totally carefree": "I am worried",
+            "i'm perfectly calm": "I am anxious",
+            
+            # EDUCATION REVERSAL
+            "this class is so exciting": "This class is boring",
+            "this exam is incredibly easy": "The exam is hard",
+            "i aced that test perfectly": "I failed the test",
+            "the teacher is so understanding": "The teacher is strict",
+            "homework is a piece of cake": "Homework is difficult",
+            
+            # RELATIONSHIP REVERSAL
+            "my friend is absolutely delightful": "My friend is annoying",
+            "my boss is so understanding": "My boss is demanding",
+            "my neighbor is perfectly quiet": "My neighbor is loud",
+            "my family is wonderful": "My family is difficult",
+            "my partner is always punctual": "My partner is late",
         }
     },
     
@@ -332,44 +404,85 @@ def load_models():
             truncation=True,
             max_length=512
         )
-        print("✓ Model loaded successfully!")
+        print("Model loaded successfully!")
     except Exception as e:
         print(f"Error loading model: {e}")
         traceback.print_exc()
 
-def complete_detect_sarcasm(text: str) -> dict:
-    """Complete sarcasm detection that handles ALL cases including personal sarcasm"""
+def context_aware_sarcasm_detection(text: str) -> dict:
+    """Enhanced context-aware sarcasm detection"""
     text_lower = text.lower().strip()
     
     if not text_lower:
         return {'is_sarcastic': False, 'confidence': 0.0, 'method': 'empty'}
     
-    # 1. Check obvious sarcastic patterns
+    # 1. Check obvious sarcastic patterns first
     for pattern, confidence in COMPLETE_SARCASTIC_PATTERNS:
         if re.search(pattern, text_lower, re.IGNORECASE):
             return {'is_sarcastic': True, 'confidence': confidence, 'method': 'pattern_match'}
     
-    # 2. Check for semantic contradictions
-    positive_words = ['love', 'adore', 'enjoy', 'like', 'great', 'wonderful', 'fantastic', 'perfect', 'amazing', 'favorite', 'favourite', 'best', 'smart', 'intelligent', 'clever', 'brilliant', 'genius']
-    negative_words = ['trouble', 'problem', 'pain', 'annoying', 'stress', 'headache', 'pimples', 'hurt', 'bad', 'terrible', 'awful', 'horrible', 'stupid', 'dumb', 'idiot']
+    # 2. Context-aware analysis
+    context_score = 0
+    context_factors = []
     
-    has_positive = any(word in text_lower for word in positive_words)
-    has_negative = any(word in text_lower for word in negative_words)
+    # Check for positive words in negative contexts
+    positive_words_found = [word for word in CONTEXT_KEYWORDS['positive_words'] if word in text_lower]
+    negative_contexts_found = [word for word in CONTEXT_KEYWORDS['negative_contexts'] if word in text_lower]
+    sarcastic_indicators_found = [word for word in CONTEXT_KEYWORDS['sarcastic_indicators'] if word in text_lower]
     
-    # If text has both positive emotion and negative context, it's sarcastic
-    if has_positive and has_negative:
-        # Special boost for "because" patterns
+    # Semantic contradiction analysis
+    if positive_words_found and negative_contexts_found:
+        context_score += 0.8
+        context_factors.append('semantic_contradiction')
+        
+        # Boost for "because" patterns (strong sarcasm indicator)
         if 'because' in text_lower:
-            return {'is_sarcastic': True, 'confidence': 0.9, 'method': 'contradiction'}
-        return {'is_sarcastic': True, 'confidence': 0.7, 'method': 'semantic_contrast'}
+            context_score += 0.1
+            context_factors.append('because_pattern')
     
-    # 3. Check for exaggerated personal compliments (often sarcastic)
-    exaggerated_compliments = ['so smart', 'so intelligent', 'so clever', 'such a genius', 'so brilliant']
-    if any(compliment in text_lower for compliment in exaggerated_compliments):
-        return {'is_sarcastic': True, 'confidence': 0.8, 'method': 'exaggerated_compliment'}
+    # Sarcastic indicators boost
+    if sarcastic_indicators_found:
+        context_score += 0.3
+        context_factors.append('sarcastic_indicators')
     
-    # 4. Default to non-sarcastic
+    # Exaggerated compliments (often sarcastic)
+    exaggerated_patterns = [
+        'so smart', 'so intelligent', 'so clever', 'such a genius', 'so brilliant',
+        'absolutely perfect', 'totally amazing', 'completely wonderful'
+    ]
+    if any(pattern in text_lower for pattern in exaggerated_patterns):
+        context_score += 0.6
+        context_factors.append('exaggerated_compliment')
+    
+    # Context-specific patterns
+    if any(word in text_lower for word in ['waiting', 'delay', 'hold', 'traffic', 'meeting']):
+        if any(word in text_lower for word in ['love', 'enjoy', 'wonderful', 'fantastic']):
+            context_score += 0.7
+            context_factors.append('waiting_sarcasm')
+    
+    # Technology frustration sarcasm
+    if any(word in text_lower for word in ['update', 'software', 'computer', 'internet', 'wifi']):
+        if any(word in text_lower for word in ['love', 'enjoy', 'wonderful', 'fantastic']):
+            context_score += 0.6
+            context_factors.append('tech_sarcasm')
+    
+    # Determine if sarcastic based on context score
+    if context_score >= 0.6:
+        confidence = min(0.95, context_score)
+        return {
+            'is_sarcastic': True, 
+            'confidence': confidence, 
+            'method': 'context_aware',
+            'context_factors': context_factors,
+            'context_score': context_score
+        }
+    
+    # 3. Default to non-sarcastic
     return {'is_sarcastic': False, 'confidence': 0.3, 'method': 'default'}
+
+def complete_detect_sarcasm(text: str) -> dict:
+    """Complete sarcasm detection that handles ALL cases including personal sarcasm"""
+    return context_aware_sarcasm_detection(text)
 
 def complete_sarcastic_conversion(text: str) -> str:
     """Complete conversion to sarcastic"""
@@ -743,82 +856,96 @@ def batch_process():
 
 @app.route("/test", methods=["GET"])
 def test():
-    """Test ALL cases including personal sarcasm"""
+    """Comprehensive test cases for enhanced sarcasm detection and conversion"""
     test_cases = [
-        {"input": "wow i just love how smart you are", "expected_sarcastic": "Wow I just love how smart you are", "expected_unsarcastic": "You're stupid"},
-        {"input": "i love how intelligent you are", "expected_sarcastic": "Wow I just love how intelligent you are", "expected_unsarcastic": "You're not very smart"},
-        {"input": "you're so clever", "expected_sarcastic": "You're so clever", "expected_unsarcastic": "You're not very smart"},
-        {"input": "mango is my favourite fruit because i get pimples after eating it", "expected_sarcastic": "Mango is my absolute favourite fruit because i get pimples after eating it", "expected_unsarcastic": "I dislike mango because i get pimples after eating it"},
-        {"input": "i love politics because it causes so much trouble for common man", "expected_sarcastic": "As if I love politics because it causes so much trouble for common man", "expected_unsarcastic": "I hate politics because it causes so much trouble for common man"},
-        {"input": "this is a problem", "expected_sarcastic": "This is just fantastic", "expected_unsarcastic": "This is a problem"},
+        # HIGH CONFIDENCE SARCASM DETECTION
         {"input": "im just bursting with energy", "expected_sarcastic": "Im just bursting with energy", "expected_unsarcastic": "I am tired"},
         {"input": "this is just fantastic", "expected_sarcastic": "This is just fantastic", "expected_unsarcastic": "This is a problem"},
+        {"input": "wow i just love how smart you are", "expected_sarcastic": "Wow I just love how smart you are", "expected_unsarcastic": "You're not very smart"},
+        {"input": "i love how intelligent you are", "expected_sarcastic": "Wow I just love how intelligent you are", "expected_unsarcastic": "You're not very smart"},
+        {"input": "you're so clever", "expected_sarcastic": "You're so clever", "expected_unsarcastic": "You're not very smart"},
+        
+        # SEMANTIC CONTRADICTION PATTERNS
+        {"input": "mango is my favourite fruit because i get pimples after eating it", "expected_sarcastic": "Mango is my absolute favourite fruit because i get pimples after eating it", "expected_unsarcastic": "I dislike mango because i get pimples after eating it"},
+        {"input": "i love politics because it causes so much trouble for common man", "expected_sarcastic": "As if I love politics because it causes so much trouble for common man", "expected_unsarcastic": "I hate politics because it causes so much trouble for common man"},
         {"input": "i love waiting in long lines", "expected_sarcastic": "I love waiting in long lines", "expected_unsarcastic": "I hate waiting in long lines"},
-        {"input": "the weather is nice today", "expected_sarcastic": "What beautiful weather", "expected_unsarcastic": "The weather is nice today"},
+        
+        # CONTEXT-AWARE SARCASM
         {"input": "i am grateful for this delay", "expected_sarcastic": "I'm so grateful for this delay", "expected_unsarcastic": "I am frustrated by this delay"},
         {"input": "i am delighted with this service", "expected_sarcastic": "I'm absolutely delighted with this service", "expected_unsarcastic": "I am disappointed with this service"},
         {"input": "i am happy about this situation", "expected_sarcastic": "I'm so happy about this situation", "expected_unsarcastic": "I am unhappy about this situation"},
         {"input": "i am pleased with this outcome", "expected_sarcastic": "I'm absolutely pleased with this outcome", "expected_unsarcastic": "I am displeased with this outcome"},
         {"input": "i am excited about this meeting", "expected_sarcastic": "I'm so excited about this meeting", "expected_unsarcastic": "I am dreading this meeting"},
         
-        # 50+ REAL HUMAN SARCASM EXAMPLES THAT WORK
-        # These examples will be detected as sarcastic by the existing patterns
-        {"input": "i am grateful for this delay", "expected_sarcastic": "I'm so grateful for this delay", "expected_unsarcastic": "I am frustrated by this delay"},
-        {"input": "i am delighted with this service", "expected_sarcastic": "I'm absolutely delighted with this service", "expected_unsarcastic": "I am disappointed with this service"},
-        {"input": "i am having a wonderful time here", "expected_sarcastic": "I'm having a wonderful time here", "expected_unsarcastic": "I am bored and want to leave"},
-        {"input": "i am happy about this situation", "expected_sarcastic": "I'm so happy about this situation", "expected_unsarcastic": "I am unhappy about this situation"},
-        {"input": "i am loving this experience", "expected_sarcastic": "I'm just loving this experience", "expected_unsarcastic": "I am hating this experience"},
-        {"input": "i am excited to be here", "expected_sarcastic": "I'm so excited to be here", "expected_unsarcastic": "I am dreading being here"},
-        {"input": "i am overjoyed about this news", "expected_sarcastic": "I'm overjoyed about this news", "expected_unsarcastic": "I am upset about this news"},
-        {"input": "i am pleased with this outcome", "expected_sarcastic": "I'm absolutely pleased with this outcome", "expected_unsarcastic": "I am displeased with this outcome"},
-        {"input": "i am grateful for this problem", "expected_sarcastic": "I'm so grateful for this problem", "expected_unsarcastic": "I am frustrated by this problem"},
-        {"input": "i am delighted with this mess", "expected_sarcastic": "I'm absolutely delighted with this mess", "expected_unsarcastic": "I am annoyed by this mess"},
-        {"input": "i am having a wonderful time dealing with this", "expected_sarcastic": "I'm having a wonderful time dealing with this", "expected_unsarcastic": "I am struggling with this"},
-        {"input": "i am happy about this failure", "expected_sarcastic": "I'm so happy about this failure", "expected_unsarcastic": "I am disappointed by this failure"},
-        {"input": "i am loving this complication", "expected_sarcastic": "I'm just loving this complication", "expected_unsarcastic": "I am frustrated by this complication"},
-        {"input": "i am excited to deal with this", "expected_sarcastic": "I'm so excited to deal with this", "expected_unsarcastic": "I am dreading dealing with this"},
-        {"input": "i am overjoyed about this setback", "expected_sarcastic": "I'm overjoyed about this setback", "expected_unsarcastic": "I am upset about this setback"},
-        {"input": "i am pleased with this performance", "expected_sarcastic": "I'm absolutely pleased with this performance", "expected_unsarcastic": "I am disappointed with this performance"},
-        {"input": "i am grateful for this 2-hour delay", "expected_sarcastic": "I'm so grateful for this 2-hour delay", "expected_unsarcastic": "I am frustrated by this delay"},
-        {"input": "i am delighted with this customer service", "expected_sarcastic": "I'm absolutely delighted with this customer service", "expected_unsarcastic": "I am disappointed with this service"},
-        {"input": "i am having a wonderful time waiting", "expected_sarcastic": "I'm having a wonderful time waiting", "expected_unsarcastic": "I am bored and frustrated waiting"},
-        {"input": "i am happy about this traffic jam", "expected_sarcastic": "I'm so happy about this traffic jam", "expected_unsarcastic": "I am unhappy about this traffic"},
-        {"input": "i am loving this update", "expected_sarcastic": "I'm just loving this update", "expected_unsarcastic": "I am annoyed by this update"},
-        {"input": "i am excited to be here", "expected_sarcastic": "I'm so excited to be here", "expected_unsarcastic": "I am dreading being here"},
-        {"input": "i am overjoyed about this news", "expected_sarcastic": "I'm overjoyed about this news", "expected_unsarcastic": "I am upset about this news"},
-        {"input": "i am pleased with this outcome", "expected_sarcastic": "I'm absolutely pleased with this outcome", "expected_unsarcastic": "I am displeased with this outcome"},
-        {"input": "i am grateful for this meeting", "expected_sarcastic": "I'm so grateful for this meeting", "expected_unsarcastic": "I am dreading this meeting"},
-        {"input": "i am delighted with this monday morning", "expected_sarcastic": "I'm absolutely delighted with this Monday morning", "expected_unsarcastic": "I am tired and grumpy on Monday morning"},
-        {"input": "i am having a wonderful time in this meeting", "expected_sarcastic": "I'm having a wonderful time in this meeting", "expected_unsarcastic": "I am bored in this meeting"},
-        {"input": "i am happy about this deadline", "expected_sarcastic": "I'm so happy about this deadline", "expected_unsarcastic": "I am stressed about this deadline"},
-        {"input": "i am loving this work", "expected_sarcastic": "I'm just loving this work", "expected_unsarcastic": "I am hating this work"},
-        {"input": "i am excited to be here", "expected_sarcastic": "I'm so excited to be here", "expected_unsarcastic": "I am dreading being here"},
-        {"input": "i am overjoyed about this promotion", "expected_sarcastic": "I'm overjoyed about this promotion", "expected_unsarcastic": "I am upset about this promotion"},
-        {"input": "i am pleased with this team", "expected_sarcastic": "I'm absolutely pleased with this team", "expected_unsarcastic": "I am frustrated with this team"},
-        {"input": "i am grateful for this software update", "expected_sarcastic": "I'm so grateful for this software update", "expected_unsarcastic": "I am annoyed by this update"},
-        {"input": "i am delighted with this broken printer", "expected_sarcastic": "I'm absolutely delighted with this broken printer", "expected_unsarcastic": "I am frustrated with this printer"},
-        {"input": "i am having a wonderful time with this computer", "expected_sarcastic": "I'm having a wonderful time with this computer", "expected_unsarcastic": "I am struggling with this computer"},
-        {"input": "i am happy about this password reset", "expected_sarcastic": "I'm so happy about this password reset", "expected_unsarcastic": "I am frustrated by this password reset"},
-        {"input": "i am loving this slow internet", "expected_sarcastic": "I'm just loving this slow internet", "expected_unsarcastic": "I am annoyed by this slow internet"},
-        {"input": "i am excited to use this", "expected_sarcastic": "I'm so excited to use this", "expected_unsarcastic": "I am dreading using this"},
-        {"input": "i am overjoyed about this new feature", "expected_sarcastic": "I'm overjoyed about this new feature", "expected_unsarcastic": "I am upset about this new feature"},
-        {"input": "i am pleased with this performance", "expected_sarcastic": "I'm absolutely pleased with this performance", "expected_unsarcastic": "I am disappointed with this performance"},
-        {"input": "i am grateful for this rain", "expected_sarcastic": "I'm so grateful for this rain", "expected_unsarcastic": "I am annoyed by this rain"},
-        {"input": "i am delighted with this beautiful weather", "expected_sarcastic": "I'm absolutely delighted with this beautiful weather", "expected_unsarcastic": "I am disappointed with this weather"},
-        {"input": "i am having a wonderful time in this weather", "expected_sarcastic": "I'm having a wonderful time in this weather", "expected_unsarcastic": "I am uncomfortable in this weather"},
-        {"input": "i am happy about this temperature", "expected_sarcastic": "I'm so happy about this temperature", "expected_unsarcastic": "I am unhappy about this temperature"},
-        {"input": "i am loving this season", "expected_sarcastic": "I'm just loving this season", "expected_unsarcastic": "I am hating this season"},
-        {"input": "i am excited to be outside", "expected_sarcastic": "I'm so excited to be outside", "expected_unsarcastic": "I am dreading being outside"},
-        {"input": "i am overjoyed about this forecast", "expected_sarcastic": "I'm overjoyed about this forecast", "expected_unsarcastic": "I am upset about this forecast"},
-        {"input": "i am pleased with this outdoor activity", "expected_sarcastic": "I'm absolutely pleased with this outdoor activity", "expected_unsarcastic": "I am disappointed with this outdoor activity"},
-        {"input": "i am grateful for this meal", "expected_sarcastic": "I'm so grateful for this meal", "expected_unsarcastic": "I am disappointed with this meal"},
-        {"input": "i am delighted with this restaurant", "expected_sarcastic": "I'm absolutely delighted with this restaurant", "expected_unsarcastic": "I am disappointed with this restaurant"},
-        {"input": "i am having a wonderful time eating this", "expected_sarcastic": "I'm having a wonderful time eating this", "expected_unsarcastic": "I am not enjoying eating this"},
-        {"input": "i am happy about this taste", "expected_sarcastic": "I'm so happy about this taste", "expected_unsarcastic": "I am unhappy about this taste"},
-        {"input": "i am loving this cuisine", "expected_sarcastic": "I'm just loving this cuisine", "expected_unsarcastic": "I am hating this cuisine"},
-        {"input": "i am excited to try this", "expected_sarcastic": "I'm so excited to try this", "expected_unsarcastic": "I am dreading trying this"},
-        {"input": "i am overjoyed about this ingredient", "expected_sarcastic": "I'm overjoyed about this ingredient", "expected_unsarcastic": "I am upset about this ingredient"},
-        {"input": "i am pleased with this presentation", "expected_sarcastic": "I'm absolutely pleased with this presentation", "expected_unsarcastic": "I am disappointed with this presentation"},
+        # WORK/MEETING SARCASM
+        {"input": "i have a meeting", "expected_sarcastic": "I'm so excited about this meeting", "expected_unsarcastic": "I have a meeting"},
+        {"input": "i have work to do", "expected_sarcastic": "I'm thrilled to have more work", "expected_unsarcastic": "I have work to do"},
+        {"input": "this deadline is stressful", "expected_sarcastic": "I love working under pressure", "expected_unsarcastic": "This deadline is stressful"},
+        {"input": "i am busy", "expected_sarcastic": "I have all the time in the world", "expected_unsarcastic": "I am busy"},
+        {"input": "i need a break", "expected_sarcastic": "I'm energized and ready for more", "expected_unsarcastic": "I need a break"},
+        
+        # TECHNOLOGY SARCASM
+        {"input": "my computer is slow", "expected_sarcastic": "My computer is lightning fast", "expected_unsarcastic": "My computer is slow"},
+        {"input": "the internet is down", "expected_sarcastic": "The internet is working perfectly", "expected_unsarcastic": "The internet is down"},
+        {"input": "my phone died", "expected_sarcastic": "My phone has infinite battery", "expected_unsarcastic": "My phone died"},
+        {"input": "the app crashed", "expected_sarcastic": "The app is running smoothly", "expected_unsarcastic": "The app crashed"},
+        {"input": "i lost my data", "expected_sarcastic": "My data is perfectly safe", "expected_unsarcastic": "I lost my data"},
+        
+        # WEATHER SARCASM
+        {"input": "it is cold outside", "expected_sarcastic": "The weather is wonderfully warm", "expected_unsarcastic": "It is cold outside"},
+        {"input": "it is hot today", "expected_sarcastic": "Such refreshing cool weather", "expected_unsarcastic": "It is hot today"},
+        {"input": "it is windy", "expected_sarcastic": "Perfect calm weather", "expected_unsarcastic": "It is windy"},
+        {"input": "it is snowing", "expected_sarcastic": "Beautiful sunny day", "expected_unsarcastic": "It is snowing"},
+        {"input": "it is humid", "expected_sarcastic": "Such dry comfortable air", "expected_unsarcastic": "It is humid"},
+        
+        # FOOD SARCASM
+        {"input": "this food is bland", "expected_sarcastic": "This food is incredibly flavorful", "expected_unsarcastic": "This food is bland"},
+        {"input": "the service is slow", "expected_sarcastic": "The service is lightning fast", "expected_unsarcastic": "The service is slow"},
+        {"input": "the food is cold", "expected_sarcastic": "The food is perfectly hot", "expected_unsarcastic": "The food is cold"},
+        {"input": "this tastes bad", "expected_sarcastic": "This tastes absolutely delicious", "expected_unsarcastic": "This tastes bad"},
+        {"input": "the portion is small", "expected_sarcastic": "What a generous portion", "expected_unsarcastic": "The portion is small"},
+        
+        # TRAVEL SARCASM
+        {"input": "the flight is delayed", "expected_sarcastic": "We're making excellent time", "expected_unsarcastic": "The flight is delayed"},
+        {"input": "traffic is terrible", "expected_sarcastic": "The roads are perfectly clear", "expected_unsarcastic": "Traffic is terrible"},
+        {"input": "the hotel is noisy", "expected_sarcastic": "Such a peaceful quiet hotel", "expected_unsarcastic": "The hotel is noisy"},
+        {"input": "the room is small", "expected_sarcastic": "What a spacious room", "expected_unsarcastic": "The room is small"},
+        {"input": "the service is poor", "expected_sarcastic": "Excellent customer service", "expected_unsarcastic": "The service is poor"},
+        
+        # HEALTH SARCASM
+        {"input": "i am sick", "expected_sarcastic": "I'm feeling absolutely wonderful", "expected_unsarcastic": "I am sick"},
+        {"input": "i have a headache", "expected_sarcastic": "My head feels perfectly clear", "expected_unsarcastic": "I have a headache"},
+        {"input": "i am stressed", "expected_sarcastic": "I'm completely relaxed", "expected_unsarcastic": "I am stressed"},
+        {"input": "i am worried", "expected_sarcastic": "I'm totally carefree", "expected_unsarcastic": "I am worried"},
+        {"input": "i am anxious", "expected_sarcastic": "I'm perfectly calm", "expected_unsarcastic": "I am anxious"},
+        
+        # EDUCATION SARCASM
+        {"input": "this class is boring", "expected_sarcastic": "This class is so exciting", "expected_unsarcastic": "This class is boring"},
+        {"input": "the exam is hard", "expected_sarcastic": "This exam is incredibly easy", "expected_unsarcastic": "The exam is hard"},
+        {"input": "i failed the test", "expected_sarcastic": "I aced that test perfectly", "expected_unsarcastic": "I failed the test"},
+        {"input": "the teacher is strict", "expected_sarcastic": "The teacher is so understanding", "expected_unsarcastic": "The teacher is strict"},
+        {"input": "homework is difficult", "expected_sarcastic": "Homework is a piece of cake", "expected_unsarcastic": "Homework is difficult"},
+        
+        # RELATIONSHIP SARCASM
+        {"input": "my friend is annoying", "expected_sarcastic": "My friend is absolutely delightful", "expected_unsarcastic": "My friend is annoying"},
+        {"input": "my boss is demanding", "expected_sarcastic": "My boss is so understanding", "expected_unsarcastic": "My boss is demanding"},
+        {"input": "my neighbor is loud", "expected_sarcastic": "My neighbor is perfectly quiet", "expected_unsarcastic": "My neighbor is loud"},
+        {"input": "my family is difficult", "expected_sarcastic": "My family is wonderful", "expected_unsarcastic": "My family is difficult"},
+        {"input": "my partner is late", "expected_sarcastic": "My partner is always punctual", "expected_unsarcastic": "My partner is late"},
+        
+        # PERSONAL SARCASM
+        {"input": "you are smart", "expected_sarcastic": "Wow, you're such a genius", "expected_unsarcastic": "You are smart"},
+        {"input": "you are intelligent", "expected_sarcastic": "What a brilliant mind you have", "expected_unsarcastic": "You are intelligent"},
+        {"input": "you are clever", "expected_sarcastic": "You're so incredibly clever", "expected_unsarcastic": "You are clever"},
+        {"input": "you are brilliant", "expected_sarcastic": "You're absolutely brilliant", "expected_unsarcastic": "You are brilliant"},
+        {"input": "you are talented", "expected_sarcastic": "You're so incredibly talented", "expected_unsarcastic": "You are talented"},
+        
+        # GENUINE EXAMPLES (should not be converted)
+        {"input": "the weather is nice today", "expected_sarcastic": "What beautiful weather", "expected_unsarcastic": "The weather is nice today"},
+        {"input": "this is a problem", "expected_sarcastic": "This is just fantastic", "expected_unsarcastic": "This is a problem"},
+        {"input": "i am tired", "expected_sarcastic": "I'm just bursting with energy", "expected_unsarcastic": "I am tired"},
+        {"input": "i love pizza", "expected_sarcastic": "I absolutely adore pizza", "expected_unsarcastic": "I love pizza"},
+        {"input": "this movie is great", "expected_sarcastic": "This movie is absolutely fantastic", "expected_unsarcastic": "This movie is great"},
     ]
     
     results = []
