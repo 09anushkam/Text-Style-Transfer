@@ -55,7 +55,7 @@ A comprehensive sarcasm detection and text style transfer system featuring **bot
 │ • Modern UI     │◄──►│ • REST API      │◄──►│ • LSTM/CNN      │
 │ • Real-time     │    │ • Hybrid Detect │    │ • Transformer   │
 │ • Examples      │    │ • ML + Patterns │    │ • Ensemble      │
-│ • History       │    │ • Batch Process│    │ • RoBERTa       │
+│ • History       │    │ • Batch Process │    │ • RoBERTa       │
 │ • ML Integration│    │ • Auto-fallback │    │ • NLTK VADER    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
@@ -1170,3 +1170,4 @@ For questions or support, please open an issue on GitHub.
 
 
 **🎭 SarcasmAI** - Advanced ML-powered sarcasm detection and conversion with 99%+ accuracy!
+
