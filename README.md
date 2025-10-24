@@ -554,7 +554,7 @@ User Input → Frontend → Backend API → Detection System
                                               ┌─────────────────┐
                                               │  Result:        │
                                               │  Sarcastic: 95% │
-                                              │  Method: hybrid  │
+                                              │  Method: hybrid │
                                               └─────────────────┘
 ```
 
@@ -1170,5 +1170,6 @@ For questions or support, please open an issue on GitHub.
 
 
 **🎭 SarcasmAI** - Advanced ML-powered sarcasm detection and conversion with 99%+ accuracy!
+
 
 
