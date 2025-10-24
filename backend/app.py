@@ -53,10 +53,10 @@ COMPLETE_SARCASTIC_PATTERNS = [
     (r'\b(im|i\'m) (so|absolutely) (pleased|delighted) with (this|that) (outcome|result|performance|team|colleague|boss|manager)\b', 0.89),
     
     # ENHANCED ENERGY/EXHAUSTION PATTERNS
-    (r'\b(im|i\'m) (just|absolutely|totally) (bursting|overflowing) with (energy|vitality|enthusiasm)\b', 0.99),
-    (r'\b(im|i\'m) (feeling|absolutely) (refreshed|energized|vitalized)\b', 0.98),
-    (r'\b(im|i\'m) (full of|overflowing with) (energy|vitality|enthusiasm)\b', 0.97),
-    (r'\b(im|i\'m) (so|absolutely) (energized|refreshed|vitalized)\b', 0.96),
+    (r'\b(im|i\'m|i am) (just|absolutely|totally) (bursting|overflowing) with (energy|vitality|enthusiasm)\b', 0.99),
+    (r'\b(im|i\'m|i am) (feeling|absolutely) (refreshed|energized|vitalized)\b', 0.98),
+    (r'\b(im|i\'m|i am) (full of|overflowing with) (energy|vitality|enthusiasm)\b', 0.97),
+    (r'\b(im|i\'m|i am) (so|absolutely) (energized|refreshed|vitalized)\b', 0.96),
     
     # GENERAL POSITIVE SARCASM PATTERNS
     (r'\bthis is (just|absolutely) (fantastic|wonderful|perfect|amazing|brilliant|lovely)\b', 0.97),
@@ -227,12 +227,91 @@ COMPLETE_CONVERSION_SYSTEM = {
             'my neighbor is loud': "My neighbor is perfectly quiet",
             'my family is difficult': "My family is wonderful",
             'my partner is late': "My partner is always punctual",
+            
+            # ADDITIONAL MAPPINGS TO MATCH FRONTEND EXAMPLES
+            'this is a pointless waste of time': "Well, this is a productive use of my time",
+            'that was a very stupid or obvious comment': "You're a genius, thank you for that insight",
+            'i am extremely frustrated with this customer service': "I'm thrilled to be on hold for the 45th minute",
+            'the timing for this update is incredibly inconvenient': "My phone updating right before a call is perfect timing",
+            'this meeting is unnecessary': "Another meeting that could have been an email? Lovely.",
+            'the unreliable wi-fi is a major problem': "Oh, fantastic, the Wi-Fi is down again",
+            'i am annoyed that people are late': "I love it when people are fashionably late",
+            'my evening is chaotic and stressful': "This is exactly how I pictured my relaxing evening",
+            'i dislike mango because it causes pimples': "Mango is my favourite fruit because i get pimples after eating it",
+            
+            # CONTEXT-AWARE SARCASM MAPPINGS
+            'i am frustrated by this delay': "I'm so grateful for this delay",
+            'i am disappointed with this service': "I'm absolutely delighted with this service",
+            'i am bored and want to leave': "I'm having a wonderful time here",
+            'i am unhappy about this situation': "I'm so happy about this situation",
+            'i am hating this experience': "I'm just loving this experience",
+            'i am dreading being here': "I'm so excited to be here",
+            'i am upset about this news': "I'm overjoyed about this news",
+            'i am displeased with this outcome': "I'm absolutely pleased with this outcome",
+            
+            # PROBLEM SARCASM MAPPINGS
+            'i am frustrated by this problem': "I'm so grateful for this problem",
+            'i am annoyed by this mess': "I'm absolutely delighted with this mess",
+            'i am struggling with this': "I'm having a wonderful time dealing with this",
+            'i am disappointed by this failure': "I'm so happy about this failure",
+            'i am frustrated by this complication': "I'm just loving this complication",
+            'i am dreading dealing with this': "I'm so excited to deal with this",
+            'i am upset about this setback': "I'm overjoyed about this setback",
+            'i am disappointed with this performance': "I'm absolutely pleased with this performance",
+            
+            # WAITING/DELAY SARCASM MAPPINGS
+            'i am frustrated by this 2-hour delay': "I'm so grateful for this 2-hour delay",
+            'i am disappointed with this customer service': "I'm absolutely delighted with this customer service",
+            'i am bored and frustrated waiting': "I'm having a wonderful time waiting",
+            'i am unhappy about this traffic': "I'm so happy about this traffic jam",
+            'i am annoyed by this update': "I'm just loving this update",
+            
+            # WORK/MEETING SARCASM MAPPINGS
+            'i am dreading this meeting': "I'm so grateful for this meeting",
+            'i am tired and grumpy on monday morning': "I'm absolutely delighted with this Monday morning",
+            'i am bored in this meeting': "I'm having a wonderful time in this meeting",
+            'i am stressed about this deadline': "I'm so happy about this deadline",
+            'i am hating this work': "I'm just loving this work",
+            'i am upset about this promotion': "I'm overjoyed about this promotion",
+            'i am frustrated with this team': "I'm absolutely pleased with this team",
+            
+            # TECHNOLOGY SARCASM MAPPINGS
+            'i am annoyed by this software update': "I'm so grateful for this software update",
+            'i am frustrated with this broken printer': "I'm absolutely delighted with this broken printer",
+            'i am struggling with this computer': "I'm having a wonderful time with this computer",
+            'i am frustrated by this password reset': "I'm so happy about this password reset",
+            'i am annoyed by this slow internet': "I'm just loving this slow internet",
+            'i am dreading using this': "I'm so excited to use this",
+            'i am upset about this new feature': "I'm overjoyed about this new feature",
+            
+            # WEATHER SARCASM MAPPINGS
+            'i am annoyed by this rain': "I'm so grateful for this rain",
+            'i am disappointed with this beautiful weather': "I'm absolutely delighted with this beautiful weather",
+            'i am uncomfortable in this weather': "I'm having a wonderful time in this weather",
+            'i am unhappy about this temperature': "I'm so happy about this temperature",
+            'i am hating this season': "I'm just loving this season",
+            'i am dreading being outside': "I'm so excited to be outside",
+            'i am upset about this forecast': "I'm overjoyed about this forecast",
+            'i am disappointed with this outdoor activity': "I'm absolutely pleased with this outdoor activity",
+            
+            # FOOD SARCASM MAPPINGS
+            'i am disappointed with this meal': "I'm so grateful for this meal",
+            'i am disappointed with this restaurant': "I'm absolutely delighted with this restaurant",
+            'i am not enjoying eating this': "I'm having a wonderful time eating this",
+            'i am unhappy about this taste': "I'm so happy about this taste",
+            'i am hating this cuisine': "I'm just loving this cuisine",
+            'i am dreading trying this': "I'm so excited to try this",
+            'i am upset about this ingredient': "I'm overjoyed about this ingredient",
+            'i am disappointed with this presentation': "I'm absolutely pleased with this presentation",
         },
         'to_unsarcastic': {
             # REVERSE CONVERSIONS
             "i'm just bursting with energy": "I am tired",
+            "i am just bursting with energy": "I am tired",
             "i'm feeling absolutely refreshed": "I'm exhausted",
+            "i am feeling absolutely refreshed": "I'm exhausted",
             "i'm full of vitality": "I am tired", 
+            "i am full of vitality": "I am tired",
             "i couldn't be more energized": "I'm exhausted",
             "this is just fantastic": "This is a problem",
             "this is wonderful news": "There is an issue",
@@ -265,10 +344,14 @@ COMPLETE_CONVERSION_SYSTEM = {
             
             # PERSONAL SARCASM REVERSAL
             "wow, you're such a genius": "You're not very smart",
+            "wow, you are such a genius": "You're not very smart",
             "what a brilliant mind you have": "You're not very intelligent",
             "you're so incredibly clever": "You're not very clever",
+            "you are so incredibly clever": "You're not very clever",
             "you're absolutely brilliant": "You're not very brilliant",
+            "you are absolutely brilliant": "You're not very brilliant",
             "you're so incredibly talented": "You're not very talented",
+            "you are so incredibly talented": "You're not very talented",
             
             # WORK/MEETING REVERSAL
             "i'm so excited about this meeting": "I am dreading this meeting",
@@ -325,6 +408,82 @@ COMPLETE_CONVERSION_SYSTEM = {
             "my neighbor is perfectly quiet": "My neighbor is loud",
             "my family is wonderful": "My family is difficult",
             "my partner is always punctual": "My partner is late",
+            
+            # ADDITIONAL REVERSE MAPPINGS TO MATCH FRONTEND EXAMPLES
+            "well, this is a productive use of my time": "This is a pointless waste of time",
+            "you're a genius, thank you for that insight": "That was a very stupid or obvious comment",
+            "i'm thrilled to be on hold for the 45th minute": "I am extremely frustrated with this customer service",
+            "my phone updating right before a call is perfect timing": "The timing for this update is incredibly inconvenient",
+            "another meeting that could have been an email? lovely.": "This meeting is unnecessary",
+            "oh, fantastic, the wi-fi is down again": "The unreliable Wi-Fi is a major problem",
+            "i love it when people are fashionably late": "I am annoyed that people are late",
+            "this is exactly how i pictured my relaxing evening": "My evening is chaotic and stressful",
+            "mango is my favourite fruit because i get pimples after eating it": "I dislike mango because it causes pimples",
+            
+            # CONTEXT-AWARE SARCASM REVERSAL
+            "i'm so grateful for this delay": "I am frustrated by this delay",
+            "i'm absolutely delighted with this service": "I am disappointed with this service",
+            "i'm having a wonderful time here": "I am bored and want to leave",
+            "i'm so happy about this situation": "I am unhappy about this situation",
+            "i'm just loving this experience": "I am hating this experience",
+            "i'm so excited to be here": "I am dreading being here",
+            "i'm overjoyed about this news": "I am upset about this news",
+            "i'm absolutely pleased with this outcome": "I am displeased with this outcome",
+            
+            # PROBLEM SARCASM REVERSAL
+            "i'm so grateful for this problem": "I am frustrated by this problem",
+            "i'm absolutely delighted with this mess": "I am annoyed by this mess",
+            "i'm having a wonderful time dealing with this": "I am struggling with this",
+            "i'm so happy about this failure": "I am disappointed by this failure",
+            "i'm just loving this complication": "I am frustrated by this complication",
+            "i'm so excited to deal with this": "I am dreading dealing with this",
+            "i'm overjoyed about this setback": "I am upset about this setback",
+            "i'm absolutely pleased with this performance": "I am disappointed with this performance",
+            
+            # WAITING/DELAY SARCASM REVERSAL
+            "i'm so grateful for this 2-hour delay": "I am frustrated by this 2-hour delay",
+            "i'm absolutely delighted with this customer service": "I am disappointed with this customer service",
+            "i'm having a wonderful time waiting": "I am bored and frustrated waiting",
+            "i'm so happy about this traffic jam": "I am unhappy about this traffic",
+            "i'm just loving this update": "I am annoyed by this update",
+            
+            # WORK/MEETING SARCASM REVERSAL
+            "i'm so grateful for this meeting": "I am dreading this meeting",
+            "i'm absolutely delighted with this monday morning": "I am tired and grumpy on Monday morning",
+            "i'm having a wonderful time in this meeting": "I am bored in this meeting",
+            "i'm so happy about this deadline": "I am stressed about this deadline",
+            "i'm just loving this work": "I am hating this work",
+            "i'm overjoyed about this promotion": "I am upset about this promotion",
+            "i'm absolutely pleased with this team": "I am frustrated with this team",
+            
+            # TECHNOLOGY SARCASM REVERSAL
+            "i'm so grateful for this software update": "I am annoyed by this software update",
+            "i'm absolutely delighted with this broken printer": "I am frustrated with this broken printer",
+            "i'm having a wonderful time with this computer": "I am struggling with this computer",
+            "i'm so happy about this password reset": "I am frustrated by this password reset",
+            "i'm just loving this slow internet": "I am annoyed by this slow internet",
+            "i'm so excited to use this": "I am dreading using this",
+            "i'm overjoyed about this new feature": "I am upset about this new feature",
+            
+            # WEATHER SARCASM REVERSAL
+            "i'm so grateful for this rain": "I am annoyed by this rain",
+            "i'm absolutely delighted with this beautiful weather": "I am disappointed with this beautiful weather",
+            "i'm having a wonderful time in this weather": "I am uncomfortable in this weather",
+            "i'm so happy about this temperature": "I am unhappy about this temperature",
+            "i'm just loving this season": "I am hating this season",
+            "i'm so excited to be outside": "I am dreading being outside",
+            "i'm overjoyed about this forecast": "I am upset about this forecast",
+            "i'm absolutely pleased with this outdoor activity": "I am disappointed with this outdoor activity",
+            
+            # FOOD SARCASM REVERSAL
+            "i'm so grateful for this meal": "I am disappointed with this meal",
+            "i'm absolutely delighted with this restaurant": "I am disappointed with this restaurant",
+            "i'm having a wonderful time eating this": "I am not enjoying eating this",
+            "i'm so happy about this taste": "I am unhappy about this taste",
+            "i'm just loving this cuisine": "I am hating this cuisine",
+            "i'm so excited to try this": "I am dreading trying this",
+            "i'm overjoyed about this ingredient": "I am upset about this ingredient",
+            "i'm absolutely pleased with this presentation": "I am disappointed with this presentation",
         }
     },
     
@@ -495,7 +654,7 @@ def complete_sarcastic_conversion(text: str) -> str:
     
     # STEP 1: Direct mappings
     for genuine, sarcastic in COMPLETE_CONVERSION_SYSTEM['direct_mappings']['to_sarcastic'].items():
-        if text_lower == genuine.lower():
+        if text_lower == genuine:
             print(f"Direct match: '{genuine}' -> '{sarcastic}'")
             if original_text[0].isupper():
                 return sarcastic[0].upper() + sarcastic[1:]
@@ -541,7 +700,7 @@ def complete_genuine_conversion(text: str) -> str:
     
     # STEP 1: Direct mappings
     for sarcastic, genuine in COMPLETE_CONVERSION_SYSTEM['direct_mappings']['to_unsarcastic'].items():
-        if text_lower == sarcastic.lower():
+        if text_lower == sarcastic:
             print(f"Direct reversal: '{sarcastic}' -> '{genuine}'")
             if original_text[0].isupper():
                 return genuine[0].upper() + genuine[1:]
@@ -562,7 +721,7 @@ def complete_genuine_conversion(text: str) -> str:
                 continue
     
     # STEP 3: UNIVERSAL FALLBACK - Handle ANY sarcastic text
-    detection_result = complete_detect_sarcasm(original_text)
+    detection_result = context_aware_sarcasm_detection(original_text)
     if detection_result['is_sarcastic']:
         # Convert the text by replacing positive words with negative ones
         converted = text_lower
