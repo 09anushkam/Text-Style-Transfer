@@ -178,65 +178,30 @@ function App() {
 
   const examples = {
     sarcastic: [
+      // CORE SARCASM EXAMPLES - Clean, working examples
       { text: "I'm just bursting with energy", description: "I am tired", type: "sarcastic" },
       { text: "This is just fantastic", description: "This is a problem", type: "sarcastic" },
       { text: "What beautiful weather", description: "The weather is bad", type: "sarcastic" },
       { text: "Just what I needed, more work", description: "I have more work", type: "sarcastic" },
       { text: "I get to enjoy some quality waiting time", description: "I have to wait", type: "sarcastic" },
-      { text: "Well, this is a productive use of my time", description: "This is a pointless waste of time", type: "sarcastic" },
-      { text: "You're a genius, thank you for that insight", description: "That was a very stupid or obvious comment", type: "sarcastic" },
-      { text: "I'm thrilled to be on hold for the 45th minute", description: "I am extremely frustrated with this customer service", type: "sarcastic" },
-      { text: "My phone updating right before a call is perfect timing", description: "The timing for this update is incredibly inconvenient", type: "sarcastic" },
-      { text: "Another meeting that could have been an email? Lovely.", description: "This meeting is unnecessary", type: "sarcastic" },
-      { text: "Oh, fantastic, the Wi-Fi is down again", description: "The unreliable Wi-Fi is a major problem", type: "sarcastic" },
-      { text: "I love it when people are fashionably late", description: "I am annoyed that people are late", type: "sarcastic" },
-      { text: "This is exactly how I pictured my relaxing evening", description: "My evening is chaotic and stressful", type: "sarcastic" },
       { text: "Wow, you're such a genius", description: "You're not very smart", type: "sarcastic" },
-      { text: "I love how intelligent you are", description: "You're not very smart", type: "sarcastic" },
-      { text: "Mango is my favourite fruit because i get pimples after eating it", description: "I dislike mango because it causes pimples", type: "sarcastic" },
-      
-      // 50+ REAL HUMAN SARCASM EXAMPLES
-      // Classic sarcastic expressions
       { text: "I'm so grateful for this delay", description: "I am frustrated by this delay", type: "sarcastic" },
       { text: "I'm absolutely delighted with this service", description: "I am disappointed with this service", type: "sarcastic" },
       { text: "I'm having a wonderful time here", description: "I am bored and want to leave", type: "sarcastic" },
-      { text: "I'm so happy about this situation", description: "I am unhappy about this situation", type: "sarcastic" },
-      { text: "I'm just loving this experience", description: "I am hating this experience", type: "sarcastic" },
       { text: "I'm so excited to be here", description: "I am dreading being here", type: "sarcastic" },
       { text: "I'm overjoyed about this news", description: "I am upset about this news", type: "sarcastic" },
       { text: "I'm absolutely pleased with this outcome", description: "I am displeased with this outcome", type: "sarcastic" },
-      
-      // Sarcastic about problems
       { text: "I'm so grateful for this problem", description: "I am frustrated by this problem", type: "sarcastic" },
-      { text: "I'm absolutely delighted with this mess", description: "I am annoyed by this mess", type: "sarcastic" },
       { text: "I'm having a wonderful time dealing with this", description: "I am struggling with this", type: "sarcastic" },
       { text: "I'm so happy about this failure", description: "I am disappointed by this failure", type: "sarcastic" },
       { text: "I'm just loving this complication", description: "I am frustrated by this complication", type: "sarcastic" },
       { text: "I'm so excited to deal with this", description: "I am dreading dealing with this", type: "sarcastic" },
       { text: "I'm overjoyed about this setback", description: "I am upset about this setback", type: "sarcastic" },
-      { text: "I'm absolutely pleased with this performance", description: "I am disappointed with this performance", type: "sarcastic" },
-      
-      // Sarcastic about waiting/delays
-      { text: "I'm so grateful for this 2-hour delay", description: "I am frustrated by this delay", type: "sarcastic" },
-      { text: "I'm absolutely delighted with this customer service", description: "I am disappointed with this service", type: "sarcastic" },
-      { text: "I'm having a wonderful time waiting", description: "I am bored and frustrated waiting", type: "sarcastic" },
-      { text: "I'm so happy about this traffic jam", description: "I am unhappy about this traffic", type: "sarcastic" },
-      { text: "I'm just loving this update", description: "I am annoyed by this update", type: "sarcastic" },
-      { text: "I'm so excited to be here", description: "I am dreading being here", type: "sarcastic" },
-      { text: "I'm overjoyed about this news", description: "I am upset about this news", type: "sarcastic" },
-      { text: "I'm absolutely pleased with this outcome", description: "I am displeased with this outcome", type: "sarcastic" },
-      
-      // Sarcastic about work/meetings
       { text: "I'm so grateful for this meeting", description: "I am dreading this meeting", type: "sarcastic" },
       { text: "I'm absolutely delighted with this Monday morning", description: "I am tired and grumpy on Monday morning", type: "sarcastic" },
       { text: "I'm having a wonderful time in this meeting", description: "I am bored in this meeting", type: "sarcastic" },
       { text: "I'm so happy about this deadline", description: "I am stressed about this deadline", type: "sarcastic" },
       { text: "I'm just loving this work", description: "I am hating this work", type: "sarcastic" },
-      { text: "I'm so excited to be here", description: "I am dreading being here", type: "sarcastic" },
-      { text: "I'm overjoyed about this promotion", description: "I am upset about this promotion", type: "sarcastic" },
-      { text: "I'm absolutely pleased with this team", description: "I am frustrated with this team", type: "sarcastic" },
-      
-      // Sarcastic about technology
       { text: "I'm so grateful for this software update", description: "I am annoyed by this update", type: "sarcastic" },
       { text: "I'm absolutely delighted with this broken printer", description: "I am frustrated with this printer", type: "sarcastic" },
       { text: "I'm having a wonderful time with this computer", description: "I am struggling with this computer", type: "sarcastic" },
@@ -244,9 +209,6 @@ function App() {
       { text: "I'm just loving this slow internet", description: "I am annoyed by this slow internet", type: "sarcastic" },
       { text: "I'm so excited to use this", description: "I am dreading using this", type: "sarcastic" },
       { text: "I'm overjoyed about this new feature", description: "I am upset about this new feature", type: "sarcastic" },
-      { text: "I'm absolutely pleased with this performance", description: "I am disappointed with this performance", type: "sarcastic" },
-      
-      // Sarcastic about weather
       { text: "I'm so grateful for this rain", description: "I am annoyed by this rain", type: "sarcastic" },
       { text: "I'm absolutely delighted with this beautiful weather", description: "I am disappointed with this weather", type: "sarcastic" },
       { text: "I'm having a wonderful time in this weather", description: "I am uncomfortable in this weather", type: "sarcastic" },
@@ -254,9 +216,6 @@ function App() {
       { text: "I'm just loving this season", description: "I am hating this season", type: "sarcastic" },
       { text: "I'm so excited to be outside", description: "I am dreading being outside", type: "sarcastic" },
       { text: "I'm overjoyed about this forecast", description: "I am upset about this forecast", type: "sarcastic" },
-      { text: "I'm absolutely pleased with this outdoor activity", description: "I am disappointed with this outdoor activity", type: "sarcastic" },
-      
-      // Sarcastic about food
       { text: "I'm so grateful for this meal", description: "I am disappointed with this meal", type: "sarcastic" },
       { text: "I'm absolutely delighted with this restaurant", description: "I am disappointed with this restaurant", type: "sarcastic" },
       { text: "I'm having a wonderful time eating this", description: "I am not enjoying eating this", type: "sarcastic" },
@@ -327,43 +286,6 @@ function App() {
       { text: "I failed the test", description: "I aced that test perfectly", type: "genuine" },
       { text: "The teacher is strict", description: "The teacher is so understanding", type: "genuine" },
       { text: "Homework is difficult", description: "Homework is a piece of cake", type: "genuine" },
-      
-      // RELATIONSHIP GENUINE EXAMPLES
-      { text: "My friend is annoying", description: "My friend is absolutely delightful", type: "genuine" },
-      { text: "My boss is demanding", description: "My boss is so understanding", type: "genuine" },
-      { text: "My neighbor is loud", description: "My neighbor is perfectly quiet", type: "genuine" },
-      { text: "My family is difficult", description: "My family is wonderful", type: "genuine" },
-      { text: "My partner is late", description: "My partner is always punctual", type: "genuine" },
-      
-      // PERSONAL GENUINE EXAMPLES
-      { text: "You are smart", description: "Wow, you're such a genius", type: "genuine" },
-      { text: "You are intelligent", description: "What a brilliant mind you have", type: "genuine" },
-      { text: "You are clever", description: "You're so incredibly clever", type: "genuine" },
-      { text: "You are brilliant", description: "You're absolutely brilliant", type: "genuine" },
-      { text: "You are talented", description: "You're so incredibly talented", type: "genuine" },
-      
-      // ADDITIONAL BASIC GENUINE EXAMPLES
-      { text: "I am frustrated", description: "I'm absolutely delighted", type: "genuine" },
-      { text: "This is annoying", description: "This is wonderful", type: "genuine" },
-      { text: "I am disappointed", description: "I'm thrilled", type: "genuine" },
-      { text: "This is frustrating", description: "This is fantastic", type: "genuine" },
-      { text: "I am overwhelmed", description: "I'm having a wonderful time", type: "genuine" },
-      { text: "This is confusing", description: "This makes perfect sense", type: "genuine" },
-      { text: "I am worried", description: "I'm totally carefree", type: "genuine" },
-      { text: "This is stressful", description: "This is relaxing", type: "genuine" },
-      { text: "I am confused", description: "I understand perfectly", type: "genuine" },
-      { text: "This is overwhelming", description: "This is manageable", type: "genuine" },
-      
-      // ADDITIONAL WORK/MEETING GENUINE EXAMPLES
-      { text: "I am dreading this presentation", description: "I'm excited about this presentation", type: "genuine" },
-      { text: "This project is overwhelming", description: "This project is exciting", type: "genuine" },
-      { text: "I am stressed about this deadline", description: "I'm confident about this deadline", type: "genuine" },
-      { text: "This meeting is unnecessary", description: "This meeting is productive", type: "genuine" },
-      { text: "I am exhausted from work", description: "I'm energized from work", type: "genuine" },
-      
-      // ADDITIONAL TECHNOLOGY GENUINE EXAMPLES
-      { text: "This software is buggy", description: "This software is reliable", type: "genuine" },
-      { text: "My laptop is overheating", description: "My laptop is running cool", type: "genuine" },
     ]
   };
 

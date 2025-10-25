@@ -42,6 +42,19 @@ COMPLETE_SARCASTIC_PATTERNS = [
     (r'\bno problem at all\b', 0.92),
     (r'\bthanks a (bunch|lot|million)\b', 0.91),
     
+    # WEATHER SARCASM PATTERNS
+    (r'\bwhat (beautiful|wonderful|perfect|great) weather\b', 0.95),
+    (r'\bsuch (beautiful|wonderful|perfect|great) weather\b', 0.94),
+    (r'\bperfect weather for a picnic\b', 0.93),
+    (r'\bsuch comfortable temperatures\b', 0.92),
+    (r'\brefreshingly cool weather\b', 0.91),
+    
+    # EXCITEMENT SARCASM PATTERNS  
+    (r'\b(im|i\'m) (so|absolutely|totally) (excited|thrilled|overjoyed) (to be here|about this|to deal with this)\b', 0.94),
+    (r'\b(im|i\'m) (so|absolutely|totally) (excited|thrilled|overjoyed) about (this|that) (news|situation|outcome|development|meeting)\b', 0.93),
+    (r'\b(im|i\'m) (so|absolutely|totally) (excited|thrilled|overjoyed) about (this|that) (meeting|presentation|deadline|work)\b', 0.92),
+    (r'\b(im|i\'m|i am) (excited|thrilled|overjoyed) about (this|that) (meeting|presentation|deadline|work)\b', 0.88),
+    
     # CONTEXTUAL SARCASM PATTERNS
     (r'\b(im|i\'m) (so|absolutely|totally) (grateful|thankful) for (this|that) (delay|wait|hold|inconvenience|problem|issue|trouble)\b', 0.96),
     (r'\b(im|i\'m) (just|absolutely) (delighted|thrilled) with (this|that) (service|customer service|support|help|performance|quality)\b', 0.95),
@@ -171,6 +184,17 @@ COMPLETE_CONVERSION_SYSTEM = {
             'you are clever': "You're so incredibly clever",
             'you are brilliant': "You're absolutely brilliant",
             'you are talented': "You're so incredibly talented",
+            
+            # EMOTIONAL STATE SARCASM
+            'i am frustrated': "I'm absolutely delighted",
+            'this is annoying': "This is wonderful",
+            'i am disappointed': "I'm thrilled",
+            'this is frustrating': "This is fantastic",
+            'i am overwhelmed': "I'm having a wonderful time",
+            'this is confusing': "This makes perfect sense",
+            'this is stressful': "This is relaxing",
+            'i am confused': "I understand perfectly",
+            'this is overwhelming': "This is manageable",
             
             # WORK/MEETING SARCASM
             'i have a meeting': "I'm so excited about this meeting",
@@ -307,6 +331,7 @@ COMPLETE_CONVERSION_SYSTEM = {
         'to_unsarcastic': {
             # REVERSE CONVERSIONS
             "i'm just bursting with energy": "I am tired",
+            "im just bursting with energy": "I am tired",
             "i am just bursting with energy": "I am tired",
             "i'm feeling absolutely refreshed": "I'm exhausted",
             "i am feeling absolutely refreshed": "I'm exhausted",
@@ -352,6 +377,21 @@ COMPLETE_CONVERSION_SYSTEM = {
             "you are absolutely brilliant": "You're not very brilliant",
             "you're so incredibly talented": "You're not very talented",
             "you are so incredibly talented": "You're not very talented",
+            
+            # EMOTIONAL STATE SARCASM REVERSALS
+            "i'm absolutely delighted": "I am frustrated",
+            "this is wonderful": "This is annoying",
+            "i'm thrilled": "I am disappointed",
+            "this is fantastic": "This is frustrating",
+            "i'm having a wonderful time": "I am overwhelmed",
+            "this makes perfect sense": "This is confusing",
+            "this is relaxing": "This is stressful",
+            "i understand perfectly": "I am confused",
+            "this is manageable": "This is overwhelming",
+            "i am grateful for this delay": "I am frustrated by this delay",
+            "i'm grateful for this delay": "I am frustrated by this delay",
+            "i am excited about this meeting": "I am dreading this meeting",
+            "i'm excited about this meeting": "I am dreading this meeting",
             
             # WORK/MEETING REVERSAL
             "i'm so excited about this meeting": "I am dreading this meeting",
@@ -652,6 +692,12 @@ def complete_sarcastic_conversion(text: str) -> str:
     text_lower = original_text.lower()
     print(f"Converting to sarcastic: '{original_text}'")
     
+    # Check if already sarcastic - if so, return as is
+    detection_result = context_aware_sarcasm_detection(original_text)
+    if detection_result['is_sarcastic'] and detection_result['confidence'] > 0.7:
+        print(f"Already sarcastic, returning as is: '{original_text}'")
+        return original_text
+    
     # STEP 1: Direct mappings
     for genuine, sarcastic in COMPLETE_CONVERSION_SYSTEM['direct_mappings']['to_sarcastic'].items():
         if text_lower == genuine:
@@ -697,6 +743,12 @@ def complete_genuine_conversion(text: str) -> str:
     
     text_lower = original_text.lower()
     print(f"Converting to genuine: '{original_text}'")
+    
+    # Check if already genuine - if so, return as is
+    detection_result = context_aware_sarcasm_detection(original_text)
+    if not detection_result['is_sarcastic'] and detection_result['confidence'] > 0.7:
+        print(f"Already genuine, returning as is: '{original_text}'")
+        return original_text
     
     # STEP 1: Direct mappings
     for sarcastic, genuine in COMPLETE_CONVERSION_SYSTEM['direct_mappings']['to_unsarcastic'].items():
