@@ -115,6 +115,79 @@ COMPLETE_SARCASTIC_PATTERNS = [
     (r'\b(absolutely|totally) (adore|love) (this|that|it)\b', 0.92),
     (r'\b(im|i\'m) (so|absolutely) (impressed|amazed|astonished) by (this|that|it)\b', 0.91),
     (r'\bthis is (absolutely|totally) (perfect|amazing|incredible|outstanding)\b', 0.90),
+    
+    # NEW PATTERNS FOR MISSED SARCASM
+    # "Oh great, another [negative thing]" patterns
+    (r'\boh (great|wonderful|fantastic), another (.+?) (that could|could\'ve|could have)\b', 0.96),
+    (r'\boh (great|wonderful|fantastic), (the|my|this) (.+?) (again|ran out|died|stopped|disconnected)\b', 0.95),
+    (r'\bwhat a (shocker|surprise)\b', 0.94),
+    
+    # "I just love when/totally love it when [negative thing]" patterns
+    (r'\bi (just |totally )?(love|adore) (it )?(when|that) (.+?) (dies|crash|fail|stop|break|disconnect|go down|run out)\b', 0.95),
+    (r'\bi (just |totally )?(love|adore) (it )?(when|that) (.+?) (talk loudly|interrupt|late|ignore|fail|panicking)\b', 0.94),
+    
+    # "Wow, you're so [positive] at [negative]" patterns
+    (r'\bwow, you\'re so (.+?) at (.+?) (must be|what a|special talent)\b', 0.95),
+    (r'\bwow, you\'re so (.+?) — (must be|what a)\b', 0.94),
+    (r'\bwow, your (.+?) is so (.+?) — i totally (didn\'t|did not)\b', 0.93),
+    
+    # "Of course I [positive], [negative thing] totally counts as [positive], right?"
+    (r'\bof course (i|you) (.+?) — (.+?) totally counts as (.+?), right\?\b', 0.96),
+    (r'\bof course (i\'m|i am|you\'re|you are) (not|not tired|not busy)\. (i|you) only (.+?) (zero|nothing)\b', 0.95),
+    
+    # "Oh sure, because [negative] is everyone's favorite"
+    (r'\boh (sure|yes), because (.+?) (is|are) (everyone\'s|my|everybody\'s) (favorite|favourite)\b', 0.95),
+    
+    # "You're absolutely right, [bad strategy/action] is a perfect strategy"
+    (r'\byou\'re (absolutely |totally )?right, (.+?) (is|are) (a|the) (perfect|great|wonderful) (strategy|plan|idea)\b', 0.96),
+    
+    # "[Positive] — it's [day/negative] again, my favorite!"
+    (r'\b(fantastic|great|wonderful|perfect) — (it\'s|its) (.+?) again, (my|everyone\'s) (favorite|favourite)\b', 0.95),
+    
+    # "I totally love it when people [annoying behavior]"
+    (r'\bi (totally |just )?(love|adore) (it )?(when|that) (people|they|someone) (.+?) (talk loudly|interrupt|scroll|type|ignore)\b', 0.94),
+    
+    # "Oh yes, please [continue negative action] — I love hearing [negative]"
+    (r'\boh (yes|yeah), please (.+?) — (i|i\'m) (love|love hearing|enjoy) (.+?)\b', 0.94),
+    
+    # "Because clearly, [negative thing] only [happens] when I [important thing]"
+    (r'\bbecause clearly, (.+?) only (.+?) when (i|you) (have|need|am|are) (.+?)\b', 0.95),
+    
+    # "[Negative] again? Wow, what a surprise!"
+    (r'\byou\'re (.+?) again\? (wow|oh), what a (surprise|shocker)\b', 0.96),
+    
+    # "No, no, don't [help] — I love [struggling/negative alone]"
+    (r'\bno, no, don\'t (.+?) — (i|i\'m) (love|love|enjoy) (.+?) (alone|struggling)\b', 0.95),
+    
+    # "Yeah, I totally enjoy [negative activity like waiting]"
+    (r'\b(yeah|yes), (i|i\'m) (totally |just )?(enjoy|love) (.+?) (waiting|standing|sitting|struggling|panicking)\b', 0.94),
+    
+    # "Sure, because [negative] only [happens] when I [innocuous], not during [important]"
+    (r'\bsure, because (.+?) only (.+?) when (i|you) (.+?), not (during|when) (.+?)\b', 0.95),
+    
+    # "You failed? No way! Who could've guessed after [negative action]"
+    (r'\byou (.+?)\? (no way|wow|really)\! (who|what) (could\'ve|could have) guessed (after|when) (.+?)\b', 0.96),
+    
+    # "Oh yes, my life's dream is to [negative thing like do assignments]"
+    (r'\boh (yes|yeah), (my|my life\'s) (dream|favorite) (is|thing is) to (.+?) (on|doing|during) (weekends|weekend|exams)\b', 0.95),
+    
+    # "Wow, you're [action] again? [Positive title]!"
+    (r'\bwow, you\'re (.+?) again\? (.+?) (queen|king|genius|expert)\b', 0.94),
+    
+    # "Yeah, please tell me [about negative] when you [did nothing]"
+    (r'\b(yeah|yes), please tell me (.+?) (when|after) (you|they) (.+?) (nothing|all day|all semester)\b', 0.94),
+    
+    # "No, no, I wasn't [doing] — please, [interrupt] again, I live for it"
+    (r'\bno, no, (i|i\'m) (wasn\'t|was not|weren\'t) (.+?) — please, (.+?) again, (i live|i love|my favorite)\b', 0.95),
+    
+    # "Of course, my favorite season is [negative]"
+    (r'\bof course, (my|everyone\'s) (favorite|favourite) (season|thing|hobby|dream) (is|thing is) ["\'](.+?)["\']\b', 0.94),
+    
+    # "I just adore when people type [short reply] instead of [proper reply]"
+    (r'\bi (just |totally )?(adore|love) when (people|they|someone) (type|say|reply) ["\'](.+?)["\'] instead of\b', 0.93),
+    
+    # Generic "I love [negative thing/hobby]" patterns
+    (r'\bi (love|adore|enjoy) (.+?) (struggling|waiting|panicking|failing|struggling alone|doing nothing)\b', 0.94),
 ]
 
 # CONTEXT-AWARE DETECTION SYSTEM
@@ -125,7 +198,10 @@ CONTEXT_KEYWORDS = {
         'horrible', 'bad', 'negative', 'pain', 'hurt', 'stress', 'annoying', 'frustrating',
         'boring', 'pointless', 'waste', 'unnecessary', 'chaos', 'mess', 'disaster', 'nightmare',
         'failure', 'mistake', 'error', 'bug', 'complication', 'difficulty', 'challenge', 'obstacle',
-        'setback', 'postponement', 'cancellation', 'rejection', 'denial', 'refusal'
+        'setback', 'postponement', 'cancellation', 'rejection', 'denial', 'refusal',
+        'died', 'crash', 'disconnect', 'died', 'ran out', 'stopped', 'ignore', 'late', 'interrupt',
+        'panicking', 'struggling', 'failed', 'exam', 'semester', 'assignment', 'weekend', 'monday',
+        'traffic', 'jams', 'exams', 'studying', 'netflix', 'shocker', 'surprise', 'nothing'
     ],
     'positive_words': [
         'love', 'adore', 'enjoy', 'like', 'great', 'wonderful', 'fantastic', 'perfect', 'amazing',
@@ -136,7 +212,9 @@ CONTEXT_KEYWORDS = {
     ],
     'sarcastic_indicators': [
         'just', 'absolutely', 'totally', 'so', 'really', 'oh', 'wow', 'yeah', 'right', 'sure',
-        'of course', 'as if', 'thanks a bunch', 'thanks a lot', 'no problem at all', 'sure thing'
+        'of course', 'as if', 'thanks a bunch', 'thanks a lot', 'no problem at all', 'sure thing',
+        'must be', 'must\'ve', 'could\'ve been', 'could have been', 'what a surprise', 'what a shocker',
+        'no way', 'who could', 'my favorite', 'everyone\'s favorite', 'perfect strategy', 'special talent'
     ]
 }
 
@@ -660,10 +738,45 @@ def context_aware_sarcasm_detection(text: str) -> dict:
             context_factors.append('waiting_sarcasm')
     
     # Technology frustration sarcasm
-    if any(word in text_lower for word in ['update', 'software', 'computer', 'internet', 'wifi']):
+    if any(word in text_lower for word in ['update', 'software', 'computer', 'internet', 'wifi', 'printer', 'phone', 'device']):
         if any(word in text_lower for word in ['love', 'enjoy', 'wonderful', 'fantastic']):
             context_score += 0.6
             context_factors.append('tech_sarcasm')
+    
+    # Rhetorical questions pattern (often sarcastic)
+    if '?' in text_lower:
+        if any(phrase in text_lower for phrase in ['who could', 'what a surprise', 'no way', 'really', 'right?']):
+            context_score += 0.7
+            context_factors.append('rhetorical_question')
+    
+    # "Again" pattern with positive words (strong sarcasm indicator)
+    if 'again' in text_lower:
+        if any(word in text_lower for word in ['love', 'great', 'fantastic', 'wonderful', 'favorite', 'favourite']):
+            context_score += 0.8
+            context_factors.append('again_pattern')
+    
+    # "Could've been an email" or similar patterns
+    if any(phrase in text_lower for phrase in ['could\'ve been', 'could have been', 'could be', 'should be']):
+        if any(word in text_lower for word in ['email', 'meeting', 'message', 'call']):
+            context_score += 0.75
+            context_factors.append('unnecessary_activity')
+    
+    # "My favorite" + negative thing pattern
+    if any(phrase in text_lower for phrase in ['my favorite', 'my favourite', 'everyone\'s favorite']):
+        if any(word in text_lower for word in ['monday', 'exam', 'traffic', 'waiting', 'assignment', 'weekend', 'stress']):
+            context_score += 0.8
+            context_factors.append('favorite_negative')
+    
+    # "Only [happens] when I [important]" pattern
+    if 'only' in text_lower and ('when i' in text_lower or 'when you' in text_lower):
+        if any(word in text_lower for word in ['important', 'need', 'have to', 'submit', 'exam', 'deadline']):
+            context_score += 0.75
+            context_factors.append('ironic_timing')
+    
+    # "Must be" pattern (often sarcastic)
+    if 'must be' in text_lower or 'must\'ve' in text_lower:
+        context_score += 0.65
+        context_factors.append('must_be_pattern')
     
     # Determine if sarcastic based on context score
     if context_score >= 0.6:
