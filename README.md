@@ -1105,20 +1105,7 @@ cd frontend && npm run build
 pip install gunicorn
 gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
-
-## 📝 License
-
-This project is open source and available under the MIT License.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📞 Support
-
-For questions or support, please open an issue on GitHub.
-
-## 🆕 **Latest Enhancements & Updates (December 2024)**
+## 🆕 **Enhancements & Updates**
 
 ### **🤖 Machine Learning Integration**
 - ✅ **Multiple Neural Networks**: LSTM, CNN, Transformer, Ensemble models
@@ -1170,6 +1157,7 @@ For questions or support, please open an issue on GitHub.
 
 
 **🎭 SarcasmAI** - Advanced ML-powered sarcasm detection and conversion with 99%+ accuracy!
+
 
 
 
